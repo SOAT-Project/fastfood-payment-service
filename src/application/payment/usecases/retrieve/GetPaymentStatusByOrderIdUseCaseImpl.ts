@@ -1,11 +1,11 @@
 import { Payment } from "src/domain/payment/Payment";
 import { GetPaymentStatusByOrderIdCommand } from "../../command/retrieve/GetPaymentStatusByOrderIdCommand";
 import type { PaymentRepositoryGateway } from "../../gateway/PaymentRepositoryGateway";
-import { GetPaymentStatusByOrderIdOutput } from "../../output/GetPaymentQrCodeByOrderIdOutput";
 import { GetPaymentStatusByOrderIdUseCase } from "./GetPaymentStatusByOrderIdUseCase";
 import { DomainError } from "src/domain/validation/DomainError";
 import { NotFoundException } from "src/domain/exception/NotFoundException";
 import { Inject, Injectable } from "@nestjs/common";
+import { GetPaymentStatusByOrderIdOutput } from "../../output/GetPaymentStatusByOrderIdOutput";
 
 @Injectable()
 export class GetPaymentStatusByOrderIdUseCaseImpl extends GetPaymentStatusByOrderIdUseCase {

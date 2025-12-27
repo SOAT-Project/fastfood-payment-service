@@ -18,6 +18,7 @@ import {
 } from "@nestjs/common";
 import type { Response } from "express";
 import { GetPaymentStatusByOrderIdResponse } from "../payment/model/response/GetPaymentStatusByOrderIdResponse";
+import { SetPaymentStatusToPaidResponse } from "../payment/model/response/SetPaymentStatusToPaidResponse";
 
 @ApiTags("Payments")
 @Controller("payments")
@@ -52,9 +53,9 @@ export class RestPaymentController implements PaymentAPI {
         status: 500,
         description: "Internal server error",
     })
-    public async setStatusToPaid(
+    public setStatusToPaid(
         @Body("order_id") orderId: string,
-    ): Promise<void> {
+    ): Promise<SetPaymentStatusToPaidResponse> {
         return this.paymentController.setStatusToPaid(orderId);
     }
 
@@ -109,7 +110,7 @@ export class RestPaymentController implements PaymentAPI {
         status: 500,
         description: "Internal server error",
     })
-    public async getStatusByOrderId(
+    public getStatusByOrderId(
         @Query("orderId") orderId: string,
     ): Promise<GetPaymentStatusByOrderIdResponse> {
         return this.paymentController.getStatusByOrderId(orderId);

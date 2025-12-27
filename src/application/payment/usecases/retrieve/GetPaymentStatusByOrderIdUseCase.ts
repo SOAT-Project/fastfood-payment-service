@@ -1,6 +1,6 @@
 import { UseCase } from "src/application/shared/UseCase";
-import { GetPaymentStatusByOrderIdOutput } from "../../output/GetPaymentQrCodeByOrderIdOutput";
 import { GetPaymentStatusByOrderIdCommand } from "../../command/retrieve/GetPaymentStatusByOrderIdCommand";
+import { GetPaymentStatusByOrderIdOutput } from "../../output/GetPaymentStatusByOrderIdOutput";
 
 export abstract class GetPaymentStatusByOrderIdUseCase extends UseCase<
     GetPaymentStatusByOrderIdCommand,

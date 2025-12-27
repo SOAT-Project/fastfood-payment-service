@@ -6,6 +6,7 @@ import { GetPaymentStatusByOrderIdCommand } from "src/application/payment/comman
 import { GetPaymentStatusByOrderIdResponse } from "../model/response/GetPaymentStatusByOrderIdResponse";
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
+import { SetPaymentStatusToPaidResponse } from "../model/response/SetPaymentStatusToPaidResponse";
 
 @Injectable()
 export class PaymentControllerImpl implements PaymentController {
@@ -32,10 +33,19 @@ export class PaymentControllerImpl implements PaymentController {
         return new GetPaymentStatusByOrderIdResponse(output.paymentStatus);
     }
 
-    async setStatusToPaid(orderId: string): Promise<void> {
+    async setStatusToPaid(
+        orderId: string,
+    ): Promise<SetPaymentStatusToPaidResponse> {
         const command: UpdatePaymentStatusCommand =
             new UpdatePaymentStatusCommand(orderId, PaymentStatus.APPROVED);
 
         const output = await this.updatePaymentStatusUseCase.execute(command);
+
+        return new SetPaymentStatusToPaidResponse(
+            output.externalReference,
+            output.orderId,
+            output.newPaymentStatus,
+            output.updatedAt,
+        );
     }
 }
