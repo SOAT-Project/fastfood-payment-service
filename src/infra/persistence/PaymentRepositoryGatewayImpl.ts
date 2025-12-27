@@ -1,6 +1,6 @@
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { Payment } from "src/domain/payment/Payment";
-import { PaymentEntityMapper } from "./mapper/PaymentEntityMapper";
+import { PaymentTypeOrmMapper } from "./mapper/PaymentEntityMapper";
 import { Inject, Injectable } from "@nestjs/common";
 import { PaymentTypeOrmEntity } from "./typeorm/PaymentEntity";
 import type { PaymentRepository } from "./repository/PaymentRepository";
@@ -21,20 +21,20 @@ export class PaymentRepositoryGatewayImpl implements PaymentRepositoryGateway {
     }
 
     async findByOrderId(orderId: string): Promise<Payment | null> {
-        const paymentEntity =
+        const paymentTypeOrmEntity =
             await this.paymentRepository.findByOrderId(orderId);
 
-        if (!paymentEntity) return null;
+        if (!paymentTypeOrmEntity) return null;
 
-        return PaymentEntityMapper.fromTypeOrmEntity(paymentEntity);
+        return PaymentTypeOrmMapper.fromTypeOrmEntity(paymentTypeOrmEntity);
     }
 
     private async save(payment: Payment): Promise<Payment> {
-        const paymentJpa: PaymentTypeOrmEntity =
-            PaymentEntityMapper.toTypeOrmEntity(payment);
+        const paymentTypeOrmEntity: PaymentTypeOrmEntity =
+            PaymentTypeOrmMapper.toTypeOrmEntity(payment);
 
-        return PaymentEntityMapper.fromTypeOrmEntity(
-            await this.paymentRepository.save(paymentJpa),
+        return PaymentTypeOrmMapper.fromTypeOrmEntity(
+            await this.paymentRepository.save(paymentTypeOrmEntity),
         );
     }
 }

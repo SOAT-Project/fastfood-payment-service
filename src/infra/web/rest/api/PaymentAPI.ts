@@ -1,5 +1,5 @@
 import type { Response } from "express";
-import { GetPaymentStatusByOrderIdResponse } from "src/infra/payment/model/request/GetPaymentStatusByOrderIdResponse";
+import { GetPaymentStatusByOrderIdResponse } from "src/infra/payment/model/response/GetPaymentStatusByOrderIdResponse";
 
 export interface PaymentAPI {
     getQrCodeByOrderId(orderId: string, res: Response): Promise<void>;

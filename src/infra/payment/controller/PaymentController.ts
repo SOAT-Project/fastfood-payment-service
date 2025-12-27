@@ -1,4 +1,4 @@
-import { GetPaymentStatusByOrderIdResponse } from "../model/request/GetPaymentStatusByOrderIdResponse";
+import { GetPaymentStatusByOrderIdResponse } from "../model/response/GetPaymentStatusByOrderIdResponse";
 
 export interface PaymentController {
     getQrCodeByOrderId(orderId: string): Promise<string>;

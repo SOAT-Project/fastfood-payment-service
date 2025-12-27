@@ -2,7 +2,7 @@ import { Payment } from "src/domain/payment/Payment";
 import { PaymentId } from "src/domain/payment/PaymentId";
 import { PaymentTypeOrmEntity } from "../typeorm/PaymentEntity";
 
-export class PaymentEntityMapper {
+export class PaymentTypeOrmMapper {
     public static toTypeOrmEntity(payment: Payment): PaymentTypeOrmEntity {
         if (!payment) return new PaymentTypeOrmEntity();
 

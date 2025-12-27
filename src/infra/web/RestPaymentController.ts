@@ -7,9 +7,17 @@ import {
 } from "@nestjs/swagger";
 import { type PaymentController } from "../payment/controller/PaymentController";
 import { PaymentAPI } from "./rest/api/PaymentAPI";
-import { Controller, Get, Inject, Post, Query, Res } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Get,
+    Inject,
+    Post,
+    Query,
+    Res,
+} from "@nestjs/common";
 import type { Response } from "express";
-import { GetPaymentStatusByOrderIdResponse } from "../payment/model/request/GetPaymentStatusByOrderIdResponse";
+import { GetPaymentStatusByOrderIdResponse } from "../payment/model/response/GetPaymentStatusByOrderIdResponse";
 
 @ApiTags("Payments")
 @Controller("payments")
@@ -25,7 +33,7 @@ export class RestPaymentController implements PaymentAPI {
         schema: {
             type: "object",
             properties: {
-                orderId: {
+                order_id: {
                     type: "string",
                     description: "The ID of the order",
                 },
@@ -45,7 +53,7 @@ export class RestPaymentController implements PaymentAPI {
         description: "Internal server error",
     })
     public async setStatusToPaid(
-        @Query("orderId") orderId: string,
+        @Body("order_id") orderId: string,
     ): Promise<void> {
         return this.paymentController.setStatusToPaid(orderId);
     }
@@ -102,7 +110,7 @@ export class RestPaymentController implements PaymentAPI {
         description: "Internal server error",
     })
     public async getStatusByOrderId(
-        orderId: string,
+        @Query("orderId") orderId: string,
     ): Promise<GetPaymentStatusByOrderIdResponse> {
         return this.paymentController.getStatusByOrderId(orderId);
     }

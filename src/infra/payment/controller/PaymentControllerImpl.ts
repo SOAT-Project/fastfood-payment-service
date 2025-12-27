@@ -3,7 +3,9 @@ import { PaymentController } from "./PaymentController";
 import { UpdatePaymentStatusUseCase } from "src/application/payment/usecases/update/UpdatePaymentStatusUseCase";
 import { GetPaymentStatusByOrderIdUseCase } from "src/application/payment/usecases/retrieve/GetPaymentStatusByOrderIdUseCase";
 import { GetPaymentStatusByOrderIdCommand } from "src/application/payment/command/retrieve/GetPaymentStatusByOrderIdCommand";
-import { GetPaymentStatusByOrderIdResponse } from "../model/request/GetPaymentStatusByOrderIdResponse";
+import { GetPaymentStatusByOrderIdResponse } from "../model/response/GetPaymentStatusByOrderIdResponse";
+import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
+import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 
 @Injectable()
 export class PaymentControllerImpl implements PaymentController {
@@ -30,7 +32,10 @@ export class PaymentControllerImpl implements PaymentController {
         return new GetPaymentStatusByOrderIdResponse(output.paymentStatus);
     }
 
-    setStatusToPaid(orderId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async setStatusToPaid(orderId: string): Promise<void> {
+        const command: UpdatePaymentStatusCommand =
+            new UpdatePaymentStatusCommand(orderId, PaymentStatus.APPROVED);
+
+        const output = await this.updatePaymentStatusUseCase.execute(command);
     }
 }

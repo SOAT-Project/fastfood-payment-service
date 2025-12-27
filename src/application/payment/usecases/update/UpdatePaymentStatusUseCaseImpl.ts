@@ -41,6 +41,7 @@ export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
 
         return UpdatePaymentStatusOutput.from(
             updatedPayment.getExternalReference(),
+            updatedPayment.getOrderId(),
             updatedPayment.getStatus(),
             updatedPayment.getUpdatedAt(),
         );
