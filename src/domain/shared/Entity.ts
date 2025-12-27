@@ -5,13 +5,13 @@ export abstract class Entity<ID extends Identifier> {
     protected readonly id: ID;
     protected readonly createdAt: Date;
     protected updatedAt: Date;
-    protected deletedAt: Date;
+    protected deletedAt?: Date;
 
     protected constructor(
         id: ID,
         createdAt: Date,
         updatedAt: Date,
-        deletedAt: Date,
+        deletedAt?: Date,
     ) {
         this.id = id;
         this.createdAt = createdAt;
@@ -33,7 +33,7 @@ export abstract class Entity<ID extends Identifier> {
         return this.updatedAt;
     }
 
-    public getDeletedAt(): Date {
+    public getDeletedAt(): Date | undefined {
         return this.deletedAt;
     }
 }

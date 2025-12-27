@@ -1,9 +1,9 @@
 export class UpdatePaymentStatusCommand {
-    externalReference: string;
+    orderId: string;
     newStatus: string;
 
-    constructor(externalReference: string, newStatus: string) {
-        this.externalReference = externalReference;
+    constructor(orderId: string, newStatus: string) {
+        this.orderId = orderId;
         this.newStatus = newStatus;
     }
 }

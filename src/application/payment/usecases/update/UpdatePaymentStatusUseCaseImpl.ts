@@ -1,15 +1,20 @@
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
 import { UpdatePaymentStatusUseCase } from "./UpdatePaymentStatusUseCase";
 import { UpdatePaymentStatusOutput } from "src/application/payment/output/UpdatePaymentStatusOutput";
-import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
+import type { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { NotFoundException } from "src/domain/exception/NotFoundException";
 import { DomainError } from "src/domain/validation/DomainError";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
+import { Inject, Injectable } from "@nestjs/common";
 
+@Injectable()
 export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
     private paymentRepositoryGateway: PaymentRepositoryGateway;
 
-    constructor(paymentRepositoryGateway: PaymentRepositoryGateway) {
+    constructor(
+        @Inject("PaymentRepositoryGateway")
+        paymentRepositoryGateway: PaymentRepositoryGateway,
+    ) {
         super();
         this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
@@ -17,19 +22,15 @@ export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
     async execute(
         command: UpdatePaymentStatusCommand,
     ): Promise<UpdatePaymentStatusOutput> {
-        const externalReference = command.externalReference;
+        const orderId = command.orderId;
         const newStatus = this.validateStatus(command.newStatus);
 
         const payment =
-            await this.paymentRepositoryGateway.findByExternalReference(
-                externalReference,
-            );
+            await this.paymentRepositoryGateway.findByOrderId(orderId);
 
         if (!payment) {
             throw NotFoundException.with([
-                new DomainError(
-                    "Payment not found for the given external reference.",
-                ),
+                new DomainError("Payment not found for the given order ID."),
             ]);
         }
 

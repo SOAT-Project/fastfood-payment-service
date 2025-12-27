@@ -12,6 +12,7 @@ export class Payment extends AggregateRoot<PaymentId> {
     private qrCode: string;
     private status: PaymentStatus;
     private orderId: string;
+    private customerId: string;
 
     protected constructor(
         id: PaymentId,
@@ -20,9 +21,10 @@ export class Payment extends AggregateRoot<PaymentId> {
         qrCode: string,
         status: PaymentStatus,
         orderId: string,
+        customerId: string,
         createdAt: Date,
         updatedAt: Date,
-        deletedAt: Date,
+        deletedAt?: Date,
     ) {
         super(id, createdAt, updatedAt, deletedAt);
         this.value = value;
@@ -30,7 +32,34 @@ export class Payment extends AggregateRoot<PaymentId> {
         this.qrCode = qrCode;
         this.status = status;
         this.orderId = orderId;
+        this.customerId = customerId;
         this.selfValidation();
+    }
+
+    public static with(
+        id: PaymentId,
+        value: number,
+        externalReference: string,
+        qrCode: string,
+        status: PaymentStatus,
+        orderId: string,
+        customerId: string,
+        createdAt: Date,
+        updatedAt: Date,
+        deletedAt?: Date,
+    ): Payment {
+        return new Payment(
+            id,
+            value,
+            externalReference,
+            qrCode,
+            status,
+            orderId,
+            customerId,
+            createdAt,
+            updatedAt,
+            deletedAt,
+        );
     }
 
     private selfValidation(): void {
@@ -60,6 +89,18 @@ export class Payment extends AggregateRoot<PaymentId> {
 
     public getExternalReference(): string {
         return this.externalReference;
+    }
+
+    public getOrderId(): string {
+        return this.orderId;
+    }
+
+    public getCustomerId(): string {
+        return this.customerId;
+    }
+
+    getQrCode(): string | undefined {
+        return this.qrCode;
     }
 
     public updateStatus(newStatus: PaymentStatus): void {

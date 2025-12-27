@@ -6,7 +6,7 @@ export abstract class AggregateRoot<ID extends Identifier> extends Entity<ID> {
         id: ID,
         createdAt: Date,
         updatedAt: Date,
-        deletedAt: Date,
+        deletedAt?: Date,
     ) {
         super(id, createdAt, updatedAt, deletedAt);
     }

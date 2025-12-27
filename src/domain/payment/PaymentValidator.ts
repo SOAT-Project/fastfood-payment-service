@@ -14,6 +14,8 @@ export class PaymentValidator extends Validator {
     public validate(): void {
         this.checkValueConstraints();
         this.checkStatusConstraints();
+        this.checkOrderIdConstraints();
+        this.checkCustomerIdConstraints();
     }
 
     private checkValueConstraints(): void {
@@ -38,6 +40,26 @@ export class PaymentValidator extends Validator {
         if (status === null || status === undefined) {
             this.validateHandler().appendDomainError(
                 new DomainError("'status' should not be null"),
+            );
+        }
+    }
+
+    private checkOrderIdConstraints(): void {
+        const orderId = this.payment.getOrderId();
+
+        if (!orderId) {
+            this.validateHandler().appendDomainError(
+                new DomainError("'orderId' should not be empty"),
+            );
+        }
+    }
+
+    private checkCustomerIdConstraints(): void {
+        const customerId = this.payment.getCustomerId();
+
+        if (!customerId) {
+            this.validateHandler().appendDomainError(
+                new DomainError("'customerId' should not be empty"),
             );
         }
     }
