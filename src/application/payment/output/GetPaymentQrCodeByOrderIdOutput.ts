@@ -1,11 +1,13 @@
 export class GetPaymentQrCodeByOrderIdOutput {
-    paymentStatus: string;
+    qrCodeBuffer: Buffer<ArrayBufferLike>;
 
-    constructor(paymentStatus: string) {
-        this.paymentStatus = paymentStatus;
+    constructor(qrCodeBuffer: Buffer<ArrayBufferLike>) {
+        this.qrCodeBuffer = qrCodeBuffer;
     }
 
-    public static from(paymentStatus: string): GetPaymentQrCodeByOrderIdOutput {
-        return new GetPaymentQrCodeByOrderIdOutput(paymentStatus);
+    public static from(
+        qrCodeBuffer: Buffer<ArrayBufferLike>,
+    ): GetPaymentQrCodeByOrderIdOutput {
+        return new GetPaymentQrCodeByOrderIdOutput(qrCodeBuffer);
     }
 }

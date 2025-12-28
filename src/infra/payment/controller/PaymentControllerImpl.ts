@@ -7,6 +7,8 @@ import { GetPaymentStatusByOrderIdResponse } from "../model/response/GetPaymentS
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { SetPaymentStatusToPaidResponse } from "../model/response/SetPaymentStatusToPaidResponse";
+import { GetPaymentQrCodeByOrderIdUseCase } from "src/application/payment/usecases/retrieve/GetPaymentQrCodeByOrderIdUseCase";
+import { GetPaymentQrCodeByOrderIdCommand } from "src/application/payment/command/retrieve/GetPaymentQrCodeByOrderIdCommand";
 
 @Injectable()
 export class PaymentControllerImpl implements PaymentController {
@@ -15,10 +17,20 @@ export class PaymentControllerImpl implements PaymentController {
         private readonly updatePaymentStatusUseCase: UpdatePaymentStatusUseCase,
         @Inject("GetPaymentStatusByOrderIdUseCase")
         private readonly getPaymentStatusByOrderIdUseCase: GetPaymentStatusByOrderIdUseCase,
+        @Inject("GetPaymentQrCodeByOrderIdUseCase")
+        private readonly getPaymentQrCodeByOrderIdUseCase: GetPaymentQrCodeByOrderIdUseCase,
     ) {}
 
-    getQrCodeByOrderId(orderId: string): Promise<string> {
-        throw new Error("Method not implemented.");
+    async getQrCodeByOrderId(
+        orderId: string,
+    ): Promise<Buffer<ArrayBufferLike>> {
+        const command: GetPaymentQrCodeByOrderIdCommand =
+            new GetPaymentQrCodeByOrderIdCommand(orderId);
+
+        const output =
+            await this.getPaymentQrCodeByOrderIdUseCase.execute(command);
+
+        return output.qrCodeBuffer;
     }
 
     async getStatusByOrderId(

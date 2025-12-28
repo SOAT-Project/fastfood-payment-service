@@ -2,7 +2,7 @@ import { GetPaymentStatusByOrderIdResponse } from "../model/response/GetPaymentS
 import { SetPaymentStatusToPaidResponse } from "../model/response/SetPaymentStatusToPaidResponse";
 
 export interface PaymentController {
-    getQrCodeByOrderId(orderId: string): Promise<string>;
+    getQrCodeByOrderId(orderId: string): Promise<Buffer<ArrayBufferLike>>;
     getStatusByOrderId(
         orderId: string,
     ): Promise<GetPaymentStatusByOrderIdResponse>;

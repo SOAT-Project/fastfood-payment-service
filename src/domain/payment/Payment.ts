@@ -99,7 +99,7 @@ export class Payment extends AggregateRoot<PaymentId> {
         return this.customerId;
     }
 
-    getQrCode(): string | undefined {
+    getQrCode(): string {
         return this.qrCode;
     }
 
