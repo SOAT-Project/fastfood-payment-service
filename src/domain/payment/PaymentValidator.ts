@@ -47,7 +47,7 @@ export class PaymentValidator extends Validator {
     private checkOrderIdConstraints(): void {
         const orderId = this.payment.getOrderId();
 
-        if (!orderId) {
+        if (!orderId || orderId.trim().length === 0) {
             this.validateHandler().appendDomainError(
                 new DomainError("'orderId' should not be empty"),
             );
@@ -57,7 +57,7 @@ export class PaymentValidator extends Validator {
     private checkCustomerIdConstraints(): void {
         const customerId = this.payment.getCustomerId();
 
-        if (!customerId) {
+        if (!customerId || customerId.trim().length === 0) {
             this.validateHandler().appendDomainError(
                 new DomainError("'customerId' should not be empty"),
             );

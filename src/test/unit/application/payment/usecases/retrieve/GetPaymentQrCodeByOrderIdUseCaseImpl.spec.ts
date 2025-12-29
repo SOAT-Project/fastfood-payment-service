@@ -55,7 +55,7 @@ describe("GetPaymentQrCodeByOrderIdUseCaseImpl", () => {
         const command = new GetPaymentQrCodeByOrderIdCommand("order-404");
         paymentRepositoryGateway.findByOrderId.mockResolvedValue(null);
         await expect(useCase.execute(command)).rejects.toThrow(
-            "Not Found Exception",
+            "Payment not found for the given order ID.",
         );
     });
 

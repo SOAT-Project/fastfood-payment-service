@@ -19,7 +19,7 @@ export class PaymentTypeOrmEntity {
     externalReference: string;
 
     @Column({ name: "qr_code", nullable: true })
-    qrCode?: string;
+    qrCode: string;
 
     @Column({ type: "varchar", nullable: false })
     status: PaymentStatus;

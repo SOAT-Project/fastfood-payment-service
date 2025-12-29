@@ -6,6 +6,7 @@ import { NotFoundException } from "src/domain/exception/NotFoundException";
 import { DomainError } from "src/domain/validation/DomainError";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { Inject, Injectable } from "@nestjs/common";
+import { IllegalStateException } from "src/domain/exception/IllegalStateException";
 
 @Injectable()
 export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
@@ -53,7 +54,9 @@ export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
         );
 
         if (!paymentStatus) {
-            throw new DomainError("Invalid payment status.");
+            throw IllegalStateException.with([
+                new DomainError("Invalid payment status provided."),
+            ]);
         }
 
         return paymentStatus;

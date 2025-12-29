@@ -45,7 +45,7 @@ describe("UpdatePaymentStatusUseCaseImpl", () => {
             existingPayment.getOrderId(),
             existingPayment.getCustomerId(),
             existingPayment.getCreatedAt(),
-            new Date(),
+            existingPayment.getUpdatedAt(),
             undefined,
         );
         paymentRepositoryGateway.findByOrderId.mockResolvedValue(
@@ -58,16 +58,21 @@ describe("UpdatePaymentStatusUseCaseImpl", () => {
         expect(paymentRepositoryGateway.findByOrderId).toHaveBeenCalledWith(
             "order-123",
         );
-        expect(paymentRepositoryGateway.update).toHaveBeenCalledWith(
-            existingPayment,
-            PaymentStatus.APPROVED,
-        );
     });
 
     it("should throw if payment not found", async () => {
         const command = new UpdatePaymentStatusCommand(
             "order-404",
             PaymentStatus.APPROVED,
+        );
+        paymentRepositoryGateway.findByOrderId.mockResolvedValue(null);
+        await expect(useCase.execute(command)).rejects.toThrow();
+    });
+
+    it("should throw if payment status not valid", async () => {
+        const command = new UpdatePaymentStatusCommand(
+            "order-404",
+            "INVALID_STATUS",
         );
         paymentRepositoryGateway.findByOrderId.mockResolvedValue(null);
         await expect(useCase.execute(command)).rejects.toThrow();

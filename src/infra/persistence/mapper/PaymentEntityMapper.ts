@@ -4,8 +4,6 @@ import { PaymentTypeOrmEntity } from "../typeorm/PaymentEntity";
 
 export class PaymentTypeOrmMapper {
     public static toTypeOrmEntity(payment: Payment): PaymentTypeOrmEntity {
-        if (!payment) return new PaymentTypeOrmEntity();
-
         const paymentEntity = new PaymentTypeOrmEntity();
         paymentEntity.id = payment.getId().getValue();
         paymentEntity.value = payment.getValue();
@@ -28,7 +26,7 @@ export class PaymentTypeOrmMapper {
             PaymentId.of(PaymentEntity.id),
             PaymentEntity.value,
             PaymentEntity.externalReference,
-            PaymentEntity.qrCode ?? "",
+            PaymentEntity.qrCode,
             PaymentEntity.status,
             PaymentEntity.orderId,
             PaymentEntity.customerId,
