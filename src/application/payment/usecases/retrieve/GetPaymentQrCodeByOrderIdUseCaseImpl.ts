@@ -39,6 +39,8 @@ export class GetPaymentQrCodeByOrderIdUseCaseImpl extends GetPaymentQrCodeByOrde
             ]);
         }
 
+        console.log("Payment Status:", payment.getStatus());
+
         if (payment.getStatus() !== PaymentStatus.PENDING) {
             throw IllegalStateException.with([
                 new DomainError(
