@@ -4,13 +4,23 @@ import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { PaymentRepositoryGatewayImpl } from "src/infra/persistence/PaymentRepositoryGatewayImpl";
 import { PaymentRepository } from "src/infra/persistence/repository/PaymentRepository";
 import { PaymentTypeOrmEntity } from "src/infra/persistence/typeorm/PaymentEntity";
+import { DataSource } from "typeorm";
+import {
+    addTransactionalDataSource,
+    initializeTransactionalContext,
+} from "typeorm-transactional";
 
 describe("GetPaymentStatusByOrderIdUseCaseImpl Integration", () => {
     let paymentRepository: PaymentRepository;
     let paymentRepositoryGateway: PaymentRepositoryGatewayImpl;
     let useCase: GetPaymentStatusByOrderIdUseCaseImpl;
+    let dataSource: DataSource;
 
-    beforeAll(() => {
+    beforeAll(async () => {
+        initializeTransactionalContext();
+        dataSource = new DataSource({ type: "sqlite", database: ":memory:" });
+        await dataSource.initialize();
+        addTransactionalDataSource(dataSource);
         paymentRepository = {
             findByOrderId: jest.fn(),
         } as any;

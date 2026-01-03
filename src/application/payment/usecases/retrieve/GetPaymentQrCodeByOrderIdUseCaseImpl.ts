@@ -8,6 +8,7 @@ import { DomainError } from "src/domain/validation/DomainError";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { IllegalStateException } from "src/domain/exception/IllegalStateException";
 import type { QRCodeServiceGateway } from "../../gateway/QRCodeServiceGateway";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class GetPaymentQrCodeByOrderIdUseCaseImpl extends GetPaymentQrCodeByOrderIdUseCase {
@@ -25,6 +26,7 @@ export class GetPaymentQrCodeByOrderIdUseCaseImpl extends GetPaymentQrCodeByOrde
         this.qrCodeServiceGateway = qrCodeServiceGateway;
     }
 
+    @Transactional()
     async execute(
         command: GetPaymentQrCodeByOrderIdCommand,
     ): Promise<GetPaymentQrCodeByOrderIdOutput> {

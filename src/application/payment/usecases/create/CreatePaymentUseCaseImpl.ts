@@ -10,6 +10,7 @@ import { CreateDynamicQrCodeRequest } from "src/infra/external/mercadopago/model
 import { randomUUID } from "crypto";
 import { CreateDynamicQrCodeItem } from "src/infra/external/mercadopago/model/CreateDynamicQrCodeItem";
 import { IllegalStateException } from "src/domain/exception/IllegalStateException";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
@@ -25,6 +26,7 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
         this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
+    @Transactional()
     async execute({
         totalAmount,
         orderId,

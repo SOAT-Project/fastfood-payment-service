@@ -2,7 +2,6 @@ import { DomainError } from "./DomainError";
 
 export interface ValidationHandler {
     appendDomainError(error: DomainError): ValidationHandler;
-    appendValidationHandler(handler: ValidationHandler): ValidationHandler;
     validate<T>(validator: { validate(handler: ValidationHandler): void }): T;
     getErrors(): DomainError[];
     hasError(): boolean;

@@ -34,7 +34,7 @@ describe("MercadoPagoService Integration", () => {
             externalReference: "test-external-ref",
             totalAmount: 100.0,
             items,
-            orderNumber: 12345,
+            orderId: "12345",
         };
 
         const httpResponse: AxiosResponse<any> = {
@@ -63,7 +63,7 @@ describe("MercadoPagoService Integration", () => {
             externalReference: "test-external-ref",
             totalAmount: 100.0,
             items,
-            orderNumber: 12345,
+            orderId: "12345",
         };
 
         const httpError = new Error(
@@ -85,7 +85,7 @@ describe("MercadoPagoService Integration", () => {
             externalReference: "test-external-ref",
             totalAmount: 100.0,
             items,
-            orderNumber: 12345,
+            orderId: "12345",
         };
 
         const httpError = {

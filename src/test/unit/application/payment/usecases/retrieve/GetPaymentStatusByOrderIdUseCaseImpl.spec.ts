@@ -1,3 +1,7 @@
+jest.mock("typeorm-transactional", () => ({
+    Transactional: () => () => ({}),
+}));
+
 import { GetPaymentStatusByOrderIdCommand } from "src/application/payment/command/retrieve/GetPaymentStatusByOrderIdCommand";
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { GetPaymentStatusByOrderIdUseCaseImpl } from "src/application/payment/usecases/retrieve/GetPaymentStatusByOrderIdUseCaseImpl";

@@ -7,6 +7,7 @@ import { DomainError } from "src/domain/validation/DomainError";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { Inject, Injectable } from "@nestjs/common";
 import { IllegalStateException } from "src/domain/exception/IllegalStateException";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
@@ -20,6 +21,7 @@ export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
         this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
+    @Transactional()
     async execute(
         command: UpdatePaymentStatusCommand,
     ): Promise<UpdatePaymentStatusOutput> {

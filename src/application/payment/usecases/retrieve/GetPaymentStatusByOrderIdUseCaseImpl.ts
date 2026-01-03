@@ -6,6 +6,7 @@ import { DomainError } from "src/domain/validation/DomainError";
 import { NotFoundException } from "src/domain/exception/NotFoundException";
 import { Inject, Injectable } from "@nestjs/common";
 import { GetPaymentStatusByOrderIdOutput } from "../../output/GetPaymentStatusByOrderIdOutput";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class GetPaymentStatusByOrderIdUseCaseImpl extends GetPaymentStatusByOrderIdUseCase {
@@ -19,6 +20,7 @@ export class GetPaymentStatusByOrderIdUseCaseImpl extends GetPaymentStatusByOrde
         this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
+    @Transactional()
     async execute(
         command: GetPaymentStatusByOrderIdCommand,
     ): Promise<GetPaymentStatusByOrderIdOutput> {

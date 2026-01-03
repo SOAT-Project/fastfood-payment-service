@@ -1,7 +1,6 @@
 import { DomainException } from "src/domain/exception/DomainException";
 import { DomainError } from "../DomainError";
 import { ValidationHandler } from "../ValidationHandler";
-import { Validation } from "../Validation";
 
 export class Notification implements ValidationHandler {
     private errors: DomainError[] = [];
@@ -19,11 +18,6 @@ export class Notification implements ValidationHandler {
         return this;
     }
 
-    appendValidationHandler(handler: ValidationHandler): Notification {
-        this.errors.push(...handler.getErrors());
-        return this;
-    }
-
     validate<T>(validator: { validate(handler: ValidationHandler): void }): T {
         try {
             return validator.validate(this) as T;
@@ -31,7 +25,9 @@ export class Notification implements ValidationHandler {
             if (e instanceof DomainException) {
                 this.errors.push(...e.getErrors());
             } else {
-                this.errors.push(new DomainError("Unknown validation error"));
+                this.appendDomainError(
+                    new DomainError("Unknown validation error"),
+                );
             }
 
             return null as T;

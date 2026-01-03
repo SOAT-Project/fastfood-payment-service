@@ -1,3 +1,7 @@
+jest.mock("typeorm-transactional", () => ({
+    Transactional: () => () => ({}),
+}));
+
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { UpdatePaymentStatusUseCaseImpl } from "src/application/payment/usecases/update/UpdatePaymentStatusUseCaseImpl";

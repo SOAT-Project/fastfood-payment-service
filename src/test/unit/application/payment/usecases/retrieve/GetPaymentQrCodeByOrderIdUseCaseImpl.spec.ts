@@ -1,3 +1,7 @@
+jest.mock("typeorm-transactional", () => ({
+    Transactional: () => () => ({}),
+}));
+
 import { GetPaymentQrCodeByOrderIdCommand } from "src/application/payment/command/retrieve/GetPaymentQrCodeByOrderIdCommand";
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { QRCodeServiceGateway } from "src/application/payment/gateway/QRCodeServiceGateway";
