@@ -5,7 +5,13 @@ import { Module } from "@nestjs/common";
 
 @Module({
     imports: [HttpModule],
-    providers: [MercadoPagoService, MercadoPagoConfig],
-    exports: [MercadoPagoService],
+    providers: [
+        {
+            provide: "PaymentService",
+            useClass: MercadoPagoService,
+        },
+        MercadoPagoConfig,
+    ],
+    exports: ["PaymentService"],
 })
 export class MercadoPagoModule {}

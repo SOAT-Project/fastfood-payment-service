@@ -62,6 +62,26 @@ export class Payment extends AggregateRoot<PaymentId> {
         );
     }
 
+    public static newPayment(
+        value: number,
+        externalReference: string,
+        qrCode: string,
+        orderId: string,
+        customerId: string,
+    ): Payment {
+        return new Payment(
+            null as any,
+            value,
+            externalReference,
+            qrCode,
+            PaymentStatus.PENDING,
+            orderId,
+            customerId,
+            new Date(),
+            new Date(),
+        );
+    }
+
     private selfValidation(): void {
         const notification = Notification.create();
 
@@ -75,7 +95,7 @@ export class Payment extends AggregateRoot<PaymentId> {
         }
     }
 
-    validate(handler: ValidationHandler): void {
+    public validate(handler: ValidationHandler): void {
         new PaymentValidator(this, handler).validate();
     }
 
@@ -99,12 +119,19 @@ export class Payment extends AggregateRoot<PaymentId> {
         return this.customerId;
     }
 
-    getQrCode(): string {
+    public getQrCode(): string {
         return this.qrCode;
     }
 
     public updateStatus(newStatus: PaymentStatus): void {
         this.status = newStatus;
+        this.updatedAt = new Date();
+
+        this.selfValidation();
+    }
+
+    public setQrCode(qrCode: string): void {
+        this.qrCode = qrCode;
         this.updatedAt = new Date();
 
         this.selfValidation();

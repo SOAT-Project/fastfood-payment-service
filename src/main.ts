@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import { initializeTransactionalContext } from "typeorm-transactional";
 import { ValidationPipe } from "@nestjs/common";
 import helmet from "helmet";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
@@ -7,6 +8,8 @@ import { GlobalExceptionFilter } from "./infra/web/filters/GlobalExceptionFilter
 import { AppModule } from "./AppModule";
 
 async function bootstrap() {
+    initializeTransactionalContext();
+
     const app = await NestFactory.create(AppModule);
 
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));

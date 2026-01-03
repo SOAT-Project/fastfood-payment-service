@@ -5,6 +5,8 @@ import { WinstonModule } from "nest-winston";
 import { transports, format } from "winston";
 import { PaymentModule } from "./infra/payment/PaymentModule";
 import { QueueModule } from "./infra/queue/QueueModule";
+import { addTransactionalDataSource } from "typeorm-transactional";
+import { DataSource } from "typeorm";
 
 @Module({
     imports: [
@@ -13,15 +15,28 @@ import { QueueModule } from "./infra/queue/QueueModule";
         ConfigModule.forRoot({
             isGlobal: true,
         }),
-        TypeOrmModule.forRoot({
-            type: "postgres",
-            host: process.env.DATABASE_HOST || "localhost",
-            port: Number(process.env.DATABASE_PORT) || 5432,
-            username: process.env.DATABASE_USERNAME || "postgres",
-            password: String(process.env.DATABASE_PASSWORD ?? "P@ssw0rd"),
-            database: process.env.DATABASE_NAME || "postgres",
-            entities: [__dirname + "/../**/typeorm/*.{ts,js}"],
-            synchronize: false,
+        TypeOrmModule.forRootAsync({
+            useFactory() {
+                return {
+                    type: "postgres",
+                    host: process.env.DATABASE_HOST || "localhost",
+                    port: Number(process.env.DATABASE_PORT) || 5432,
+                    username: process.env.DATABASE_USERNAME || "postgres",
+                    password: String(
+                        process.env.DATABASE_PASSWORD ?? "P@ssw0rd",
+                    ),
+                    database: process.env.DATABASE_NAME || "postgres",
+                    entities: [__dirname + "/../**/typeorm/*.{ts,js}"],
+                    synchronize: false,
+                };
+            },
+            async dataSourceFactory(options) {
+                if (!options) {
+                    throw new Error("TypeORM options not provided");
+                }
+
+                return addTransactionalDataSource(new DataSource(options));
+            },
         }),
         WinstonModule.forRoot({
             transports: [
