@@ -6,6 +6,7 @@ import { PaymentPersistenceModule } from "src/infra/persistence/module/PaymentPe
 import { QRCodeService } from "src/infra/utility/qrcode/QRCodeService";
 import { GetPaymentQrCodeByOrderIdUseCaseImpl } from "src/application/payment/usecases/retrieve/GetPaymentQrCodeByOrderIdUseCaseImpl";
 import { PaymentControllerImpl } from "./controller/PaymentControllerImpl";
+import { CreatePaymentUseCaseImpl } from "src/application/payment/usecases/create/CreatePaymentUseCaseImpl";
 
 @Module({
     imports: [PaymentPersistenceModule],
@@ -14,6 +15,10 @@ import { PaymentControllerImpl } from "./controller/PaymentControllerImpl";
         {
             provide: "PaymentController",
             useClass: PaymentControllerImpl,
+        },
+        {
+            provide: "CreatePaymentUseCase",
+            useClass: CreatePaymentUseCaseImpl,
         },
         {
             provide: "UpdatePaymentStatusUseCase",
@@ -34,6 +39,7 @@ import { PaymentControllerImpl } from "./controller/PaymentControllerImpl";
     ],
     exports: [
         "PaymentController",
+        "CreatePaymentUseCase",
         "UpdatePaymentStatusUseCase",
         "GetPaymentStatusByOrderIdUseCase",
         "GetPaymentQrCodeByOrderIdUseCase",
