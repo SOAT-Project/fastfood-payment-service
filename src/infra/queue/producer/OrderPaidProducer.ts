@@ -6,7 +6,7 @@ import { OrderPaidEvent } from "../model/OrderPaidEvent";
 @Injectable()
 export class OrderPaidProducer {
     constructor(
-        @Inject("QueueServiceGateway")
+        @Inject("QueueService")
         private readonly queueService: QueueServiceGateway,
     ) {}
 

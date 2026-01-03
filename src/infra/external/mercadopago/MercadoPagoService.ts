@@ -16,7 +16,7 @@ export class MercadoPagoService implements PaymentService {
     ) {}
 
     async createDynamicQrCode({
-        orderNumber,
+        orderId,
         externalReference,
         totalAmount,
         items: orderProducts,
@@ -25,8 +25,8 @@ export class MercadoPagoService implements PaymentService {
             const path = `/instore/orders/qr/seller/collectors/${this.mercadoPagoConfig.collectorId}/pos/${this.mercadoPagoConfig.posId}/qrs`;
 
             const requestBody = {
-                title: `Order ${orderNumber}`,
-                description: `Order ${orderNumber}`,
+                title: `Order ${orderId}`,
+                description: `Order ${orderId}`,
                 external_reference: externalReference,
                 total_amount: totalAmount,
                 items: orderProducts.map((orderProduct) => ({

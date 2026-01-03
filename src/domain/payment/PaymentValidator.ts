@@ -11,7 +11,7 @@ export class PaymentValidator extends Validator {
         this.payment = payment;
     }
 
-    public validate(): void {
+    validate(): void {
         this.checkValueConstraints();
         this.checkStatusConstraints();
         this.checkOrderIdConstraints();

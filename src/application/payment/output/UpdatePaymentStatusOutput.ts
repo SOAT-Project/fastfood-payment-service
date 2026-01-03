@@ -16,7 +16,7 @@ export class UpdatePaymentStatusOutput {
         this.updatedAt = updatedAt;
     }
 
-    public static from(
+    static from(
         externalReference: string,
         orderId: string,
         newPaymentStatus: string,

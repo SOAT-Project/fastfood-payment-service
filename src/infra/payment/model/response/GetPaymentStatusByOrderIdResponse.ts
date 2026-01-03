@@ -1,3 +1,3 @@
 export class GetPaymentStatusByOrderIdResponse {
-    constructor(public status: string) {}
+    constructor(status: string) {}
 }

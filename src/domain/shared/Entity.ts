@@ -19,21 +19,21 @@ export abstract class Entity<ID extends Identifier> {
         this.deletedAt = deletedAt;
     }
 
-    public abstract validate(validation: ValidationHandler): void;
+    abstract validate(validation: ValidationHandler): void;
 
-    public getId(): ID {
+    getId(): ID {
         return this.id;
     }
 
-    public getCreatedAt(): Date {
+    getCreatedAt(): Date {
         return this.createdAt;
     }
 
-    public getUpdatedAt(): Date {
+    getUpdatedAt(): Date {
         return this.updatedAt;
     }
 
-    public getDeletedAt(): Date | undefined {
+    getDeletedAt(): Date | undefined {
         return this.deletedAt;
     }
 }

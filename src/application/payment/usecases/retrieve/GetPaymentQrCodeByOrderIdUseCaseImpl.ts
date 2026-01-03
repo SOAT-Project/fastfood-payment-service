@@ -25,7 +25,7 @@ export class GetPaymentQrCodeByOrderIdUseCaseImpl extends GetPaymentQrCodeByOrde
         this.qrCodeServiceGateway = qrCodeServiceGateway;
     }
 
-    public async execute(
+    async execute(
         command: GetPaymentQrCodeByOrderIdCommand,
     ): Promise<GetPaymentQrCodeByOrderIdOutput> {
         const orderId = command.orderId;

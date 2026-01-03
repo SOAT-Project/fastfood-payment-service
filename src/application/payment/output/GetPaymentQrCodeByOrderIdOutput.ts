@@ -5,7 +5,7 @@ export class GetPaymentQrCodeByOrderIdOutput {
         this.qrCodeBuffer = qrCodeBuffer;
     }
 
-    public static from(
+    static from(
         qrCodeBuffer: Buffer<ArrayBufferLike>,
     ): GetPaymentQrCodeByOrderIdOutput {
         return new GetPaymentQrCodeByOrderIdOutput(qrCodeBuffer);

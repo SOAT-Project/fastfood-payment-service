@@ -3,7 +3,7 @@ import { PaymentId } from "src/domain/payment/PaymentId";
 import { PaymentTypeOrmEntity } from "../typeorm/PaymentEntity";
 
 export class PaymentTypeOrmMapper {
-    public static toTypeOrmEntity(payment: Payment): PaymentTypeOrmEntity {
+    static toTypeOrmEntity(payment: Payment): PaymentTypeOrmEntity {
         const paymentEntity = new PaymentTypeOrmEntity();
         paymentEntity.id = payment.getId().getValue();
         paymentEntity.value = payment.getValue();
@@ -19,9 +19,7 @@ export class PaymentTypeOrmMapper {
         return paymentEntity;
     }
 
-    public static fromTypeOrmEntity(
-        PaymentEntity: PaymentTypeOrmEntity,
-    ): Payment {
+    static fromTypeOrmEntity(PaymentEntity: PaymentTypeOrmEntity): Payment {
         return Payment.with(
             PaymentId.of(PaymentEntity.id),
             PaymentEntity.value,

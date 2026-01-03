@@ -53,7 +53,7 @@ export class RestPaymentController implements PaymentAPI {
         status: 500,
         description: "Internal server error",
     })
-    public setStatusToPaid(
+    setStatusToPaid(
         @Body("order_id") orderId: string,
     ): Promise<SetPaymentStatusToPaidResponse> {
         return this.paymentController.setStatusToPaid(orderId);
@@ -80,7 +80,7 @@ export class RestPaymentController implements PaymentAPI {
         status: 500,
         description: "Internal server error",
     })
-    public async getQrCodeByOrderId(
+    async getQrCodeByOrderId(
         @Query("orderId") orderId: string,
         @Res() res: Response,
     ): Promise<void> {
@@ -110,7 +110,7 @@ export class RestPaymentController implements PaymentAPI {
         status: 500,
         description: "Internal server error",
     })
-    public getStatusByOrderId(
+    getStatusByOrderId(
         @Query("orderId") orderId: string,
     ): Promise<GetPaymentStatusByOrderIdResponse> {
         return this.paymentController.getStatusByOrderId(orderId);

@@ -19,7 +19,7 @@ export class GetPaymentStatusByOrderIdUseCaseImpl extends GetPaymentStatusByOrde
         this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
-    public async execute(
+    async execute(
         command: GetPaymentStatusByOrderIdCommand,
     ): Promise<GetPaymentStatusByOrderIdOutput> {
         const orderId = command.orderId;

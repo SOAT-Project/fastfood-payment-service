@@ -1,11 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import { initializeTransactionalContext } from "typeorm-transactional";
 import { ValidationPipe } from "@nestjs/common";
-import helmet from "helmet";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { SwaggerConfig } from "./infra/config/SwaggerConfig";
 import { GlobalExceptionFilter } from "./infra/web/filters/GlobalExceptionFilter";
 import { AppModule } from "./AppModule";
+import helmet from "helmet";
 
 async function bootstrap() {
     initializeTransactionalContext();

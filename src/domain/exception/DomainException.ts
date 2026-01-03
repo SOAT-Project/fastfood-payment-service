@@ -8,7 +8,7 @@ export class DomainException extends Error {
         this.errors = errors;
     }
 
-    public getErrors(): DomainError[] {
+    getErrors(): DomainError[] {
         return this.errors;
     }
 }

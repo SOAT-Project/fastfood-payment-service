@@ -7,7 +7,7 @@ export abstract class Validator {
         this.handler = handler;
     }
 
-    public abstract validate(): void;
+    abstract validate(): void;
 
     protected validateHandler(): ValidationHandler {
         return this.handler;

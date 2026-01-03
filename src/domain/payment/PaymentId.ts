@@ -8,11 +8,11 @@ export class PaymentId extends Identifier {
         this.id = id;
     }
 
-    public static of(id: number): PaymentId {
+    static of(id: number): PaymentId {
         return new PaymentId(id);
     }
 
-    public getValue(): number {
+    getValue(): number {
         return this.id;
     }
 }

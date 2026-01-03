@@ -7,9 +7,11 @@ import { QRCodeService } from "src/infra/utility/qrcode/QRCodeService";
 import { GetPaymentQrCodeByOrderIdUseCaseImpl } from "src/application/payment/usecases/retrieve/GetPaymentQrCodeByOrderIdUseCaseImpl";
 import { PaymentControllerImpl } from "./controller/PaymentControllerImpl";
 import { CreatePaymentUseCaseImpl } from "src/application/payment/usecases/create/CreatePaymentUseCaseImpl";
+import { QueueModule } from "../queue/QueueModule";
+import { MercadoPagoModule } from "../external/mercadopago/MercadoPagoModule";
 
 @Module({
-    imports: [PaymentPersistenceModule],
+    imports: [PaymentPersistenceModule, QueueModule, MercadoPagoModule],
     controllers: [RestPaymentController],
     providers: [
         {

@@ -10,7 +10,7 @@ export class Notification implements ValidationHandler {
         this.errors = errors;
     }
 
-    public static create(errors: DomainError[] = []): Notification {
+    static create(errors: DomainError[] = []): Notification {
         return new Notification(errors);
     }
 

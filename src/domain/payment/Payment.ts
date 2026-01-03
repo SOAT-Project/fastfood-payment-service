@@ -36,7 +36,7 @@ export class Payment extends AggregateRoot<PaymentId> {
         this.selfValidation();
     }
 
-    public static with(
+    static with(
         id: PaymentId,
         value: number,
         externalReference: string,
@@ -62,7 +62,7 @@ export class Payment extends AggregateRoot<PaymentId> {
         );
     }
 
-    public static newPayment(
+    static newPayment(
         value: number,
         externalReference: string,
         qrCode: string,
@@ -95,42 +95,42 @@ export class Payment extends AggregateRoot<PaymentId> {
         }
     }
 
-    public validate(handler: ValidationHandler): void {
+    validate(handler: ValidationHandler): void {
         new PaymentValidator(this, handler).validate();
     }
 
-    public getValue(): number {
+    getValue(): number {
         return this.value;
     }
 
-    public getStatus(): PaymentStatus {
+    getStatus(): PaymentStatus {
         return this.status;
     }
 
-    public getExternalReference(): string {
+    getExternalReference(): string {
         return this.externalReference;
     }
 
-    public getOrderId(): string {
+    getOrderId(): string {
         return this.orderId;
     }
 
-    public getCustomerId(): string {
+    getCustomerId(): string {
         return this.customerId;
     }
 
-    public getQrCode(): string {
+    getQrCode(): string {
         return this.qrCode;
     }
 
-    public updateStatus(newStatus: PaymentStatus): void {
+    updateStatus(newStatus: PaymentStatus): void {
         this.status = newStatus;
         this.updatedAt = new Date();
 
         this.selfValidation();
     }
 
-    public setQrCode(qrCode: string): void {
+    setQrCode(qrCode: string): void {
         this.qrCode = qrCode;
         this.updatedAt = new Date();
 
