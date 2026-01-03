@@ -11,8 +11,4 @@ export class DomainException extends Error {
     public getErrors(): DomainError[] {
         return this.errors;
     }
-
-    public static with(errors: DomainError[]): DomainException {
-        return new DomainException("", errors);
-    }
 }

@@ -54,4 +54,48 @@ describe("MercadoPagoService Integration", () => {
         const response = await service.createDynamicQrCode(request);
         expect(response).toBe("test-qr-code");
     });
+
+    it("should handle errors without response when creating a dynamic QR code", async () => {
+        const items: CreateDynamicQrCodeItem[] = [
+            new CreateDynamicQrCodeItem("Test Item", 1, 100.0),
+        ];
+        const request: CreateDynamicQrCodeRequest = {
+            externalReference: "test-external-ref",
+            totalAmount: 100.0,
+            items,
+            orderNumber: 12345,
+        };
+
+        const httpError = new Error(
+            "Unexpected error during Mercado Pago payment",
+        );
+        (service as any).httpService.post.mockReturnValue(
+            of(Promise.reject(httpError)),
+        );
+        await expect(service.createDynamicQrCode(request)).rejects.toThrow(
+            "Unexpected error during Mercado Pago payment",
+        );
+    });
+
+    it("should handle errors with response when creating a dynamic QR code", async () => {
+        const items: CreateDynamicQrCodeItem[] = [
+            new CreateDynamicQrCodeItem("Test Item", 1, 100.0),
+        ];
+        const request: CreateDynamicQrCodeRequest = {
+            externalReference: "test-external-ref",
+            totalAmount: 100.0,
+            items,
+            orderNumber: 12345,
+        };
+
+        const httpError = {
+            response: { data: { message: "Invalid request" } },
+        };
+        (service as any).httpService.post.mockReturnValue(
+            of(Promise.reject(httpError)),
+        );
+        await expect(service.createDynamicQrCode(request)).rejects.toThrow(
+            "Invalid request",
+        );
+    });
 });

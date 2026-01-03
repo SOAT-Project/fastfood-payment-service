@@ -3,10 +3,12 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { WinstonModule } from "nest-winston";
 import { transports, format } from "winston";
-import { PaymentModule } from "../payment/module/PaymentModule";
+import { PaymentModule } from "./infra/payment/PaymentModule";
+import { QueueModule } from "./infra/queue/QueueModule";
 
 @Module({
     imports: [
+        QueueModule,
         PaymentModule,
         ConfigModule.forRoot({
             isGlobal: true,
