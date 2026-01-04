@@ -10,8 +10,6 @@ import { DataSource } from "typeorm";
 
 @Module({
     imports: [
-        QueueModule,
-        PaymentModule,
         ConfigModule.forRoot({
             isGlobal: true,
         }),
@@ -58,6 +56,8 @@ import { DataSource } from "typeorm";
                 }),
             ],
         }),
+        QueueModule,
+        PaymentModule,
     ],
 })
 export class AppModule {}
