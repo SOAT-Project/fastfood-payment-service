@@ -5,13 +5,13 @@ import { PaymentTypeOrmEntity } from "../typeorm/PaymentEntity";
 export class PaymentTypeOrmMapper {
     static toTypeOrmEntity(payment: Payment): PaymentTypeOrmEntity {
         const paymentEntity = new PaymentTypeOrmEntity();
-        paymentEntity.id = payment.getId().getValue();
+        paymentEntity.id = payment.getId()?.getValue();
         paymentEntity.value = payment.getValue();
         paymentEntity.externalReference = payment.getExternalReference();
         paymentEntity.qrCode = payment.getQrCode();
         paymentEntity.status = payment.getStatus();
         paymentEntity.orderId = payment.getOrderId();
-        paymentEntity.customerId = payment["customerId"];
+        paymentEntity.customerId = payment.getCustomerId();
         paymentEntity.createdAt = payment.getCreatedAt();
         paymentEntity.updatedAt = payment.getUpdatedAt();
         paymentEntity.deletedAt = payment.getDeletedAt();

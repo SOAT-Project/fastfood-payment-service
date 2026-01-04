@@ -7,9 +7,6 @@ export class IllegalStateException extends DomainException {
     }
 
     static with(errors: DomainError[]): DomainException {
-        return new IllegalStateException(
-            errors[0]?.message ?? "Illegal state",
-            errors,
-        );
+        return new IllegalStateException("Illegal state", errors);
     }
 }

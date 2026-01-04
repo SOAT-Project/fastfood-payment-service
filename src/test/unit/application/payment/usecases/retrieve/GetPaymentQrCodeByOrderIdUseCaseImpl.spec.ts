@@ -59,7 +59,7 @@ describe("GetPaymentQrCodeByOrderIdUseCaseImpl", () => {
         const command = new GetPaymentQrCodeByOrderIdCommand("order-404");
         paymentRepositoryGateway.findByOrderId.mockResolvedValue(null);
         await expect(useCase.execute(command)).rejects.toThrow(
-            "Payment not found for the given order ID.",
+            "Not Found Exception",
         );
     });
 
@@ -79,8 +79,25 @@ describe("GetPaymentQrCodeByOrderIdUseCaseImpl", () => {
             undefined,
         );
         paymentRepositoryGateway.findByOrderId.mockResolvedValue(payment);
-        await expect(useCase.execute(command)).rejects.toThrow(
-            "QR code can only be retrieved for pending payments.",
+        await expect(useCase.execute(command)).rejects.toThrow("Illegal state");
+    });
+
+    it("should throw if payment QR code is empty", async () => {
+        const command = new GetPaymentQrCodeByOrderIdCommand("order-123");
+        const paymentId = PaymentId.of(Math.random());
+        const payment = Payment.with(
+            paymentId,
+            100,
+            "order-123",
+            "",
+            PaymentStatus.PENDING,
+            "order-123",
+            "customer-123",
+            new Date(),
+            new Date(),
+            undefined,
         );
+        paymentRepositoryGateway.findByOrderId.mockResolvedValue(payment);
+        await expect(useCase.execute(command)).rejects.toThrow("Illegal state");
     });
 });

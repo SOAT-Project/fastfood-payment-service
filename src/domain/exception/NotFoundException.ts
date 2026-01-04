@@ -10,9 +10,6 @@ export class NotFoundException extends DomainException {
     }
 
     static with(errors: DomainError[]): NotFoundException {
-        if (errors.length === 1)
-            return new NotFoundException(errors[0].message, [errors[0]]);
-
         return new NotFoundException("Not Found Exception", errors);
     }
 }

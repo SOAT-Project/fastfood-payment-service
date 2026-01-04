@@ -73,7 +73,7 @@ describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
         );
 
         await expect(useCase.execute(command)).rejects.toThrow(
-            "Payment not found for the given order ID.",
+            "Not Found Exception",
         );
     });
 });

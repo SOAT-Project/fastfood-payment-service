@@ -1,6 +1,7 @@
 import { DomainException } from "src/domain/exception/DomainException";
 import { DomainError } from "../DomainError";
 import { ValidationHandler } from "../ValidationHandler";
+import { NotificationException } from "src/domain/exception/NotificationException";
 
 export class Notification implements ValidationHandler {
     private errors: DomainError[] = [];
@@ -18,9 +19,9 @@ export class Notification implements ValidationHandler {
         return this;
     }
 
-    validate<T>(validator: { validate(handler: ValidationHandler): void }): T {
+    validate<T>(factory: () => T): T {
         try {
-            return validator.validate(this) as T;
+            return factory();
         } catch (e) {
             if (e instanceof DomainException) {
                 this.errors.push(...e.getErrors());

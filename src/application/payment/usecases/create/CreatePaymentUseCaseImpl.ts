@@ -37,7 +37,7 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
 
         const externalReference = randomUUID().toString();
 
-        const payment = notification.validate<Payment>(
+        const payment = notification.validate<Payment>(() =>
             Payment.newPayment(
                 totalAmount,
                 externalReference,
