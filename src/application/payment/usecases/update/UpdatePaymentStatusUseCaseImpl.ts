@@ -8,17 +8,23 @@ import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { Inject, Injectable } from "@nestjs/common";
 import { IllegalStateException } from "src/domain/exception/IllegalStateException";
 import { Transactional } from "typeorm-transactional";
+import type { PaymentEventProducerGateway } from "../../gateway/PaymentEventProducerGateway";
+import { PaymentStatusUpdatedEvent } from "src/infra/queue/model/PaymentStatusUpdatedEvent";
 
 @Injectable()
 export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
     private paymentRepositoryGateway: PaymentRepositoryGateway;
+    private paymentEventProducerGateway: PaymentEventProducerGateway;
 
     constructor(
         @Inject("PaymentRepositoryGateway")
         paymentRepositoryGateway: PaymentRepositoryGateway,
+        @Inject("PaymentEventProducerGateway")
+        paymentEventProducerGateway: PaymentEventProducerGateway,
     ) {
         super();
         this.paymentRepositoryGateway = paymentRepositoryGateway;
+        this.paymentEventProducerGateway = paymentEventProducerGateway;
     }
 
     @Transactional()
@@ -41,6 +47,16 @@ export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
 
         const updatedPayment =
             await this.paymentRepositoryGateway.update(payment);
+
+        const paymentStatusUpdatedEvent: PaymentStatusUpdatedEvent = {
+            orderId: updatedPayment.getOrderId(),
+            paidAt: updatedPayment.getCreatedAt().toISOString(),
+            amount: updatedPayment.getValue(),
+        };
+
+        await this.paymentEventProducerGateway.publishPaymentStatusUpdated(
+            paymentStatusUpdatedEvent,
+        );
 
         return UpdatePaymentStatusOutput.from(
             updatedPayment.getExternalReference(),

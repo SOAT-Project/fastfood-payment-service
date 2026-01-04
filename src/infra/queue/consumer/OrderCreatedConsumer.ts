@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { OrderCreatedEvent } from "../model/OrderCreatedEvent";
-import { SqsMessageHandler } from "@ssut/nestjs-sqs";
+import { SqsConsumerEventHandler, SqsMessageHandler } from "@ssut/nestjs-sqs";
 import { CreatePaymentUseCase } from "src/application/payment/usecases/create/CreatePaymentUseCase";
 import { CreatePaymentCommand } from "src/application/payment/command/create/CreatePaymentCommand";
 
@@ -11,7 +11,7 @@ export class OrderCreatedConsumer {
         private readonly createPaymentUseCase: CreatePaymentUseCase,
     ) {}
 
-    @SqsMessageHandler("order-created-queue", false)
+    @SqsConsumerEventHandler("order-created-queue", "false")
     async handleMessage(message: OrderCreatedEvent): Promise<void> {
         const command = new CreatePaymentCommand(
             message.orderId,

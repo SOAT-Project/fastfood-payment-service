@@ -1,8 +1,8 @@
 export class SetPaymentStatusToPaidResponse {
     constructor(
-        external_reference: string,
-        order_id: string,
-        new_payment_status: string,
-        updated_at: Date,
+        public external_reference: string,
+        public order_id: string,
+        public new_payment_status: string,
+        public updated_at: Date,
     ) {}
 }

@@ -1,5 +1,4 @@
-export interface OrderPaidEvent {
-    eventType: "ORDER_PAID";
+export interface PaymentStatusUpdatedEvent {
     orderId: string;
     paidAt: string;
     amount: number;

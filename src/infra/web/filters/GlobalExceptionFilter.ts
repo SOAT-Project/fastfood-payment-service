@@ -21,6 +21,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
+        console.log(exception);
+
         if (exception instanceof NotFoundException) {
             this.logger.error("NotFoundException", exception.stack);
 

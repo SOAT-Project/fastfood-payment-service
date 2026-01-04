@@ -1,38 +1,57 @@
-import { SQS } from "@aws-sdk/client-sqs";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { SqsService } from "@ssut/nestjs-sqs";
+import { randomUUID } from "crypto";
 import { QueueServiceGateway } from "src/application/queue/gateway/QueueServiceGateway";
+import { NotificationException } from "src/domain/exception/NotificationException";
 import { QueueMessage } from "src/domain/queue/QueueMessage";
 
 @Injectable()
 export class SqsQueueService implements QueueServiceGateway {
-    private sqs = new SQS();
+    private readonly logger = new Logger(SqsQueueService.name);
+
+    public constructor(private readonly sqsService: SqsService) {}
+
+    async sendFifoMessage<T>(
+        queueName: string,
+        message: QueueMessage<T>,
+    ): Promise<void> {
+        try {
+            await this.sqsService.send(queueName, {
+                id: randomUUID(),
+                body: JSON.stringify(message),
+                groupId: message.groupId!,
+                deduplicationId: randomUUID(),
+            });
+        } catch (error) {
+            this.logger.error(
+                `Failed to send message to queue ${queueName}`,
+                error.stack,
+            );
+            throw new Error(
+                `Failed to send message to queue ${queueName}`,
+                error,
+            );
+        }
+    }
 
     async sendMessage<T>(
         queueName: string,
         message: QueueMessage<T>,
     ): Promise<void> {
-        await this.sqs.sendMessage({
-            QueueUrl: queueName,
-            MessageBody: JSON.stringify(message),
-        });
-    }
-
-    async receiveMessages<T>(queueName: string): Promise<QueueMessage<T>[]> {
-        const result = await this.sqs.receiveMessage({
-            QueueUrl: queueName,
-            MaxNumberOfMessages: 10,
-            WaitTimeSeconds: 10,
-        });
-
-        if (!result.Messages) return [];
-
-        return result.Messages.map((msg) => {
-            const body = JSON.parse(msg.Body!);
-            return QueueMessage.with<T>(
-                body.id,
-                body.payload,
-                new Date(body.occurredAt),
+        try {
+            await this.sqsService.send(queueName, {
+                id: randomUUID(),
+                body: JSON.stringify(message),
+            });
+        } catch (error) {
+            this.logger.error(
+                `Failed to send message to queue ${queueName}`,
+                error.stack,
             );
-        });
+            throw new Error(
+                `Failed to send message to queue ${queueName}`,
+                error,
+            );
+        }
     }
 }
