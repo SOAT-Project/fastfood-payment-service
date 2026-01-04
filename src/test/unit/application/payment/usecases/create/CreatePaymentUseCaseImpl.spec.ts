@@ -19,6 +19,7 @@ describe("CreatePaymentUseCaseImpl", () => {
         paymentRepositoryGateway = {
             create: jest.fn(),
             update: jest.fn(),
+            findByOrderId: jest.fn(),
         } as any;
         paymentService = {
             createDynamicQrCode: jest.fn(),
@@ -118,5 +119,33 @@ describe("CreatePaymentUseCaseImpl", () => {
         await expect(useCase.execute(command)).rejects.toThrow(
             "QR Code text was not returned from Payment Service",
         );
+    });
+
+    it("should not create duplicate payment for the same order", async () => {
+        const command = new CreatePaymentCommand(
+            "order-789",
+            "customer-789",
+            150,
+            [{ productId: "prod-3", quantity: 3, price: 50 }],
+        );
+
+        const existingPayment = Payment.with(
+            PaymentId.of(Math.random()),
+            150,
+            "order-789",
+            "existing-qr-code",
+            PaymentStatus.PENDING,
+            "order-789",
+            "customer-789",
+            new Date(),
+            new Date(),
+            undefined,
+        );
+
+        paymentRepositoryGateway.findByOrderId.mockResolvedValueOnce(
+            existingPayment,
+        );
+
+        expect(await useCase.execute(command)).toBeUndefined();
     });
 });

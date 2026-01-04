@@ -25,6 +25,7 @@ describe("CreatePaymentUseCaseImpl Integration", () => {
 
         paymentRepository = {
             save: jest.fn(),
+            findByOrderId: jest.fn(),
         } as any;
         paymentRepositoryGateway = new PaymentRepositoryGatewayImpl(
             paymentRepository,

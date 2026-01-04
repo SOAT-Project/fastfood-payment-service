@@ -3,6 +3,7 @@ jest.mock("typeorm-transactional", () => ({
 }));
 
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
+import { PaymentEventProducerGateway } from "src/application/payment/gateway/PaymentEventProducerGateway";
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { UpdatePaymentStatusUseCaseImpl } from "src/application/payment/usecases/update/UpdatePaymentStatusUseCaseImpl";
 import { Payment } from "src/domain/payment/Payment";
@@ -11,6 +12,7 @@ import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 
 describe("UpdatePaymentStatusUseCaseImpl", () => {
     let paymentRepositoryGateway: jest.Mocked<PaymentRepositoryGateway>;
+    let paymentEventProducerGateway: jest.Mocked<PaymentEventProducerGateway>;
     let useCase: UpdatePaymentStatusUseCaseImpl;
 
     beforeEach(() => {
@@ -18,7 +20,13 @@ describe("UpdatePaymentStatusUseCaseImpl", () => {
             findByOrderId: jest.fn(),
             update: jest.fn(),
         } as any;
-        useCase = new UpdatePaymentStatusUseCaseImpl(paymentRepositoryGateway);
+        paymentEventProducerGateway = {
+            publishPaymentStatusUpdated: jest.fn(),
+        } as any;
+        useCase = new UpdatePaymentStatusUseCaseImpl(
+            paymentRepositoryGateway,
+            paymentEventProducerGateway,
+        );
     });
 
     it("should update payment status for valid order", async () => {

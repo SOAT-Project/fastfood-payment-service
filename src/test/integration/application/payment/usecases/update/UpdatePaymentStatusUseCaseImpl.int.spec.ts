@@ -1,10 +1,13 @@
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
+import { PaymentEventProducerGateway } from "src/application/payment/gateway/PaymentEventProducerGateway";
 import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { UpdatePaymentStatusUseCaseImpl } from "src/application/payment/usecases/update/UpdatePaymentStatusUseCaseImpl";
+import { QueueServiceGateway } from "src/application/queue/gateway/QueueServiceGateway";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
 import { PaymentRepositoryGatewayImpl } from "src/infra/persistence/PaymentRepositoryGatewayImpl";
 import { PaymentRepository } from "src/infra/persistence/repository/PaymentRepository";
 import { PaymentTypeOrmEntity } from "src/infra/persistence/typeorm/PaymentEntity";
+import { PaymentEventProducer } from "src/infra/queue/producer/PaymentEventProducer";
 import { DataSource } from "typeorm";
 import {
     addTransactionalDataSource,
@@ -14,6 +17,8 @@ import {
 describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
     let paymentRepository: PaymentRepository;
     let paymentRepositoryGateway: PaymentRepositoryGatewayImpl;
+    let paymentEventProducerGateway: PaymentEventProducerGateway;
+    let queueServiceGateway: QueueServiceGateway;
     let useCase: UpdatePaymentStatusUseCaseImpl;
     let dataSource: DataSource;
 
@@ -30,7 +35,17 @@ describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
         paymentRepositoryGateway = new PaymentRepositoryGatewayImpl(
             paymentRepository,
         );
-        useCase = new UpdatePaymentStatusUseCaseImpl(paymentRepositoryGateway);
+
+        queueServiceGateway = {
+            sendMessage: jest.fn(),
+        } as any;
+        paymentEventProducerGateway = new PaymentEventProducer(
+            queueServiceGateway,
+        );
+        useCase = new UpdatePaymentStatusUseCaseImpl(
+            paymentRepositoryGateway,
+            paymentEventProducerGateway,
+        );
     });
 
     it("should update payment status for valid order", async () => {
@@ -42,6 +57,7 @@ describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
         payment.value = 100;
         payment.externalReference = "ext-ref-123";
         payment.customerId = "customer-123";
+        payment.createdAt = new Date();
 
         jest.spyOn(paymentRepository, "findByOrderId").mockResolvedValueOnce(
             payment,

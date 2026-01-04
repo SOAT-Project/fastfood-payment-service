@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 import { SqsService } from "@ssut/nestjs-sqs";
 import { randomUUID } from "crypto";
 import { QueueServiceGateway } from "src/application/queue/gateway/QueueServiceGateway";
-import { NotificationException } from "src/domain/exception/NotificationException";
 import { QueueMessage } from "src/domain/queue/QueueMessage";
 
 @Injectable()

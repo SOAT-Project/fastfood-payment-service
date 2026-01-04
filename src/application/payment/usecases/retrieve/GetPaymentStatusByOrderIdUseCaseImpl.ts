@@ -1,4 +1,3 @@
-import { Payment } from "src/domain/payment/Payment";
 import { GetPaymentStatusByOrderIdCommand } from "../../command/retrieve/GetPaymentStatusByOrderIdCommand";
 import type { PaymentRepositoryGateway } from "../../gateway/PaymentRepositoryGateway";
 import { GetPaymentStatusByOrderIdUseCase } from "./GetPaymentStatusByOrderIdUseCase";
@@ -10,14 +9,11 @@ import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class GetPaymentStatusByOrderIdUseCaseImpl extends GetPaymentStatusByOrderIdUseCase {
-    private paymentRepositoryGateway: PaymentRepositoryGateway;
-
     constructor(
         @Inject("PaymentRepositoryGateway")
-        paymentRepositoryGateway: PaymentRepositoryGateway,
+        private readonly paymentRepositoryGateway: PaymentRepositoryGateway,
     ) {
         super();
-        this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
     @Transactional()

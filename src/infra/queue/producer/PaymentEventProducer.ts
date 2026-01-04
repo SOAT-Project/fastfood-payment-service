@@ -22,6 +22,6 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
             new Date(event.paidAt),
         );
 
-        await this.queueService.sendFifoMessage("order-paid-queue", message);
+        await this.queueService.sendMessage("order-paid-queue", message);
     }
 }

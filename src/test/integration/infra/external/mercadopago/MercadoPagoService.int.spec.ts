@@ -39,7 +39,7 @@ describe("MercadoPagoService Integration", () => {
 
         const httpResponse: AxiosResponse<any> = {
             data: {
-                qr_code: "test-qr-code",
+                qr_data: "test-qr-code",
             },
             status: 200,
             statusText: "OK",

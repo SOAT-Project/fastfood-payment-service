@@ -13,18 +13,13 @@ import { PaymentStatusUpdatedEvent } from "src/infra/queue/model/PaymentStatusUp
 
 @Injectable()
 export class UpdatePaymentStatusUseCaseImpl extends UpdatePaymentStatusUseCase {
-    private paymentRepositoryGateway: PaymentRepositoryGateway;
-    private paymentEventProducerGateway: PaymentEventProducerGateway;
-
     constructor(
         @Inject("PaymentRepositoryGateway")
-        paymentRepositoryGateway: PaymentRepositoryGateway,
+        private readonly paymentRepositoryGateway: PaymentRepositoryGateway,
         @Inject("PaymentEventProducerGateway")
-        paymentEventProducerGateway: PaymentEventProducerGateway,
+        private readonly paymentEventProducerGateway: PaymentEventProducerGateway,
     ) {
         super();
-        this.paymentRepositoryGateway = paymentRepositoryGateway;
-        this.paymentEventProducerGateway = paymentEventProducerGateway;
     }
 
     @Transactional()

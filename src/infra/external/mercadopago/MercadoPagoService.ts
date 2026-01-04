@@ -52,7 +52,7 @@ export class MercadoPagoService implements PaymentService {
                 ),
             );
 
-            return response.data.qr_code;
+            return response.data.qr_data;
         } catch (error: any) {
             this.logger.error("Mercado Pago error", error);
 

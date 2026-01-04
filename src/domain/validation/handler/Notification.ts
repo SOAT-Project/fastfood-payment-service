@@ -1,7 +1,6 @@
 import { DomainException } from "src/domain/exception/DomainException";
 import { DomainError } from "../DomainError";
 import { ValidationHandler } from "../ValidationHandler";
-import { NotificationException } from "src/domain/exception/NotificationException";
 
 export class Notification implements ValidationHandler {
     private errors: DomainError[] = [];
@@ -14,7 +13,7 @@ export class Notification implements ValidationHandler {
         return new Notification(errors);
     }
 
-    appendDomainError(error: DomainError): Notification {
+    appendDomainError(error: DomainError): ValidationHandler {
         this.errors.push(error);
         return this;
     }

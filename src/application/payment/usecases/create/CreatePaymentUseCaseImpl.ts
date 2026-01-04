@@ -1,6 +1,6 @@
 import type { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import type { PaymentService } from "../../gateway/PaymentService";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { CreatePaymentUseCase } from "./CreatePaymentUseCase";
 import { CreatePaymentCommand } from "../../command/create/CreatePaymentCommand";
 import { Payment } from "src/domain/payment/Payment";
@@ -14,16 +14,15 @@ import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
-    private paymentRepositoryGateway: PaymentRepositoryGateway;
+    private readonly logger = new Logger(CreatePaymentUseCaseImpl.name);
 
     constructor(
         @Inject("PaymentRepositoryGateway")
-        paymentRepositoryGateway: PaymentRepositoryGateway,
+        private readonly paymentRepositoryGateway: PaymentRepositoryGateway,
         @Inject("PaymentService")
         private readonly paymentService: PaymentService,
     ) {
         super();
-        this.paymentRepositoryGateway = paymentRepositoryGateway;
     }
 
     @Transactional()
@@ -33,6 +32,14 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
         customerId,
         items,
     }: CreatePaymentCommand): Promise<void> {
+        const existingPayment =
+            await this.paymentRepositoryGateway.findByOrderId(orderId);
+
+        if (existingPayment) {
+            this.logger.warn(`Payment already exists for orderId: ${orderId}`);
+            return;
+        }
+
         const notification = Notification.create();
 
         const externalReference = randomUUID().toString();

@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateDynamicQrCodeResponse {
     @ApiProperty()
-    qr_code: string;
+    qr_data: string;
 
     getQrCode(): string {
-        return this.qr_code;
+        return this.qr_data;
     }
 }

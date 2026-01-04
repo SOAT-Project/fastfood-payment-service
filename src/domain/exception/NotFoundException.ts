@@ -1,6 +1,3 @@
-import { Entity } from "../shared/Entity";
-import { Identifier } from "../shared/Identifier";
-import { PublicIdentifier } from "../shared/PublicIdentifier";
 import { DomainError } from "../validation/DomainError";
 import { DomainException } from "./DomainException";
 

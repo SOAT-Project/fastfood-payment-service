@@ -12,18 +12,13 @@ import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class GetPaymentQrCodeByOrderIdUseCaseImpl extends GetPaymentQrCodeByOrderIdUseCase {
-    private paymentRepositoryGateway: PaymentRepositoryGateway;
-    private qrCodeServiceGateway: QRCodeServiceGateway;
-
     constructor(
         @Inject("PaymentRepositoryGateway")
-        paymentRepositoryGateway: PaymentRepositoryGateway,
+        private readonly paymentRepositoryGateway: PaymentRepositoryGateway,
         @Inject("QRCodeServiceGateway")
-        qrCodeServiceGateway: QRCodeServiceGateway,
+        private readonly qrCodeServiceGateway: QRCodeServiceGateway,
     ) {
         super();
-        this.paymentRepositoryGateway = paymentRepositoryGateway;
-        this.qrCodeServiceGateway = qrCodeServiceGateway;
     }
 
     @Transactional()
