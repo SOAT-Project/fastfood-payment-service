@@ -18,7 +18,7 @@ export class SqsQueueService implements QueueServiceGateway {
             await this.sqsService.send(queueName, {
                 id: randomUUID(),
                 body: JSON.stringify(message),
-                groupId: message.groupId!,
+                groupId: message.groupId || "default",
                 deduplicationId: randomUUID(),
             });
         } catch (error) {

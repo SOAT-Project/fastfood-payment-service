@@ -12,7 +12,7 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
         private readonly queueService: QueueServiceGateway,
     ) {}
 
-    @SqsMessageHandler("order-paid-queue", false)
+    @SqsMessageHandler("payment-to-order.fifo", false)
     async publishPaymentStatusUpdated(
         event: PaymentStatusUpdatedEvent,
     ): Promise<void> {

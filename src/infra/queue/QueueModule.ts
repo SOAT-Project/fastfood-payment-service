@@ -14,7 +14,17 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             useFactory: async (configService: ConfigService) => ({
                 consumers: [
                     {
-                        name: "order-to-payment.fifo",
+                        name: (() => {
+                            const name = configService.get<string>(
+                                "AWS_ORDER_TO_PAYMENT_QUEUE_NAME",
+                            );
+                            if (!name)
+                                throw new Error(
+                                    "AWS_ORDER_TO_PAYMENT_QUEUE_NAME is not set",
+                                );
+                            return name;
+                        })(),
+                        suppressFifoWarning: true,
                         queueUrl: (() => {
                             const url = configService.get<string>(
                                 "AWS_ORDER_TO_PAYMENT_QUEUE_URL",
@@ -36,7 +46,17 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 ],
                 producers: [
                     {
-                        name: "payment-to-order.fifo",
+                        name: (() => {
+                            const name = configService.get<string>(
+                                "AWS_PAYMENT_TO_ORDER_QUEUE_NAME",
+                            );
+                            if (!name)
+                                throw new Error(
+                                    "AWS_PAYMENT_TO_ORDER_QUEUE_NAME is not set",
+                                );
+                            return name;
+                        })(),
+                        suppressFifoWarning: true,
                         queueUrl: (() => {
                             const url = configService.get<string>(
                                 "AWS_PAYMENT_TO_ORDER_QUEUE_URL",

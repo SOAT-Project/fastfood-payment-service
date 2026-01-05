@@ -14,7 +14,7 @@ export class OrderConsumer {
         private readonly createPaymentUseCase: CreatePaymentUseCase,
     ) {}
 
-    @SqsMessageHandler("order-created-queue", false)
+    @SqsMessageHandler("order-to-payment.fifo", false)
     async handleMessage(message: Message): Promise<void> {
         const messageBody = message.Body;
 
