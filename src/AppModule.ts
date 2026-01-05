@@ -1,12 +1,11 @@
 import { Module } from "@nestjs/common";
+import { HealthController } from "./infra/web/HealthController";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { WinstonModule } from "nest-winston";
 import { transports, format } from "winston";
 import { PaymentModule } from "./infra/payment/PaymentModule";
 import { QueueModule } from "./infra/queue/QueueModule";
-import { addTransactionalDataSource } from "typeorm-transactional";
-import { DataSource } from "typeorm";
 
 @Module({
     imports: [
@@ -57,5 +56,6 @@ import { DataSource } from "typeorm";
         QueueModule,
         PaymentModule,
     ],
+    controllers: [HealthController],
 })
 export class AppModule {}
