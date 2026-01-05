@@ -1,7 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { SqsModule } from "@ssut/nestjs-sqs";
 import { SqsQueueService } from "./SqsQueueService";
-import { OrderCreatedConsumer } from "./consumer/OrderCreatedConsumer";
+import { OrderConsumer } from "./consumer/OrderConsumer";
 import { PaymentModule } from "../payment/PaymentModule";
 import { PaymentEventProducer } from "./producer/PaymentEventProducer";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -14,14 +14,14 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             useFactory: async (configService: ConfigService) => ({
                 consumers: [
                     {
-                        name: "order-created-queue",
+                        name: "order-to-payment.fifo",
                         queueUrl: (() => {
                             const url = configService.get<string>(
-                                "AWS_ORDER_CREATED_QUEUE_URL",
+                                "AWS_ORDER_TO_PAYMENT_QUEUE_URL",
                             );
                             if (!url)
                                 throw new Error(
-                                    "AWS_ORDER_CREATED_QUEUE_URL is not set",
+                                    "AWS_ORDER_TO_PAYMENT_QUEUE_URL is not set",
                                 );
                             return url;
                         })(),
@@ -36,14 +36,14 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 ],
                 producers: [
                     {
-                        name: "order-paid-queue",
+                        name: "payment-to-order.fifo",
                         queueUrl: (() => {
                             const url = configService.get<string>(
-                                "AWS_ORDER_PAID_QUEUE_URL",
+                                "AWS_PAYMENT_TO_ORDER_QUEUE_URL",
                             );
                             if (!url)
                                 throw new Error(
-                                    "AWS_ORDER_PAID_QUEUE_URL is not set",
+                                    "AWS_PAYMENT_TO_ORDER_QUEUE_URL is not set",
                                 );
                             return url;
                         })(),
@@ -69,7 +69,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             provide: "PaymentEventProducerGateway",
             useClass: PaymentEventProducer,
         },
-        OrderCreatedConsumer,
+        OrderConsumer,
     ],
     exports: ["QueueService", "PaymentEventProducerGateway"],
 })

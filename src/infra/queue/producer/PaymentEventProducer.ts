@@ -18,10 +18,14 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
     ): Promise<void> {
         const message = QueueMessage.with(
             event.orderId,
+            "ORDER_PAID",
             event,
             new Date(event.paidAt),
         );
 
-        await this.queueService.sendMessage("order-paid-queue", message);
+        await this.queueService.sendFifoMessage(
+            "payment-to-order.fifo",
+            message,
+        );
     }
 }
