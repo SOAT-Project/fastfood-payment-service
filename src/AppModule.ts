@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { HealthController } from "./infra/web/HealthController";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { WinstonModule } from "nest-winston";
@@ -57,6 +56,5 @@ import { PaymentTypeOrmEntity } from "./infra/persistence/typeorm/PaymentEntity"
         QueueModule,
         PaymentModule,
     ],
-    controllers: [HealthController],
 })
 export class AppModule {}

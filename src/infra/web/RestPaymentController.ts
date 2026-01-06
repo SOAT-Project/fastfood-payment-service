@@ -28,6 +28,15 @@ export class RestPaymentController implements PaymentAPI {
         private readonly paymentController: PaymentController,
     ) {}
 
+    @Get([
+        "/health",
+        "/api/actuator/health/readiness",
+        "/api/actuator/health/liveness",
+    ])
+    actuatorHealth() {
+        return { status: "ok" };
+    }
+
     @Post("set-to-paid")
     @ApiOperation({ summary: "Set Payment Status to Paid by Order ID" })
     @ApiBody({
