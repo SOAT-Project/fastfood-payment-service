@@ -1,5 +1,5 @@
-export interface OrderCreatedEvent {
-    eventType: "ORDER_CREATED";
+export interface OrderEvent {
+    eventType: string;
     orderId: string;
     customerId: string;
     totalAmount: number;

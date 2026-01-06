@@ -1,30 +1,65 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { SqsModule } from "@ssut/nestjs-sqs";
 import { SqsQueueService } from "./SqsQueueService";
-import { OrderCreatedConsumer } from "./consumer/OrderCreatedConsumer";
+import { OrderConsumer } from "./consumer/OrderConsumer";
 import { PaymentModule } from "../payment/PaymentModule";
 import { PaymentEventProducer } from "./producer/PaymentEventProducer";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
     imports: [
         forwardRef(() => PaymentModule),
-        SqsModule.register({
-            consumers: [
-                {
-                    name: "order-created-queue",
-                    queueUrl:
-                        "https://sqs.sa-east-1.amazonaws.com/967154861998/order-created-queue",
-                    region: "sa-east-1",
-                },
-            ],
-            producers: [
-                {
-                    name: "order-paid-queue",
-                    queueUrl:
-                        "https://sqs.sa-east-1.amazonaws.com/967154861998/order-paid-queue",
-                    region: "sa-east-1",
-                },
-            ],
+        SqsModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                consumers: [
+                    {
+                        name: "fastfood-soat-terraform-order-to-payment.fifo",
+                        suppressFifoWarning: true,
+                        queueUrl: (() => {
+                            const url = configService.get<string>(
+                                "AWS_ORDER_TO_PAYMENT_QUEUE_URL",
+                            );
+                            if (!url)
+                                throw new Error(
+                                    "AWS_ORDER_TO_PAYMENT_QUEUE_URL is not set",
+                                );
+                            return url;
+                        })(),
+                        region: (() => {
+                            const region =
+                                configService.get<string>("AWS_REGION");
+                            if (!region)
+                                throw new Error("AWS_REGION is not set");
+                            return region;
+                        })(),
+                    },
+                ],
+                producers: [
+                    {
+                        name: "fastfood-soat-terraform-payment-to-order.fifo",
+                        suppressFifoWarning: true,
+                        queueUrl: (() => {
+                            const url = configService.get<string>(
+                                "AWS_PAYMENT_TO_ORDER_QUEUE_URL",
+                            );
+                            if (!url)
+                                throw new Error(
+                                    "AWS_PAYMENT_TO_ORDER_QUEUE_URL is not set",
+                                );
+                            return url;
+                        })(),
+                        region: (() => {
+                            const region =
+                                configService.get<string>("AWS_REGION");
+                            if (!region)
+                                throw new Error("AWS_REGION is not set");
+                            return region;
+                        })(),
+                    },
+                ],
+            }),
+            inject: [ConfigService],
         }),
     ],
     providers: [
@@ -36,7 +71,7 @@ import { PaymentEventProducer } from "./producer/PaymentEventProducer";
             provide: "PaymentEventProducerGateway",
             useClass: PaymentEventProducer,
         },
-        OrderCreatedConsumer,
+        OrderConsumer,
     ],
     exports: ["QueueService", "PaymentEventProducerGateway"],
 })
