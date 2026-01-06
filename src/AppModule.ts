@@ -6,6 +6,7 @@ import { WinstonModule } from "nest-winston";
 import { transports, format } from "winston";
 import { PaymentModule } from "./infra/payment/PaymentModule";
 import { QueueModule } from "./infra/queue/QueueModule";
+import { PaymentTypeOrmEntity } from "./infra/persistence/typeorm/PaymentEntity";
 
 @Module({
     imports: [
@@ -28,7 +29,7 @@ import { QueueModule } from "./infra/queue/QueueModule";
                     "P@ssw0rd",
                 database:
                     configService.get<string>("DATABASE_NAME") || "postgres",
-                entities: [__dirname + "/../**/typeorm/*.{ts,js}"],
+                entities: [PaymentTypeOrmEntity],
                 synchronize: false,
             }),
             inject: [ConfigService],

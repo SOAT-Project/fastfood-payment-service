@@ -39,7 +39,7 @@ spec:
             serviceAccountName: payment
             containers:
                 - name: payment
-                  image: soatproject/fastfood-soat-payment-service:latest
+                  image: soatproject/fastfood-payment-service:latest
                   ports:
                       - containerPort: 8080
                   envFrom:
