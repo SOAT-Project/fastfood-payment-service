@@ -33,6 +33,7 @@ resource "kubernetes_secret" "payment_secret" {
   }
 
   data = {
+    APPLICATION_PORT                  = var.application_port
     AWS_REGION                        = var.aws_region
     AWS_ACCESS_KEY_ID                 = var.aws_access_key
     AWS_SECRET_ACCESS_KEY             = var.aws_secret_key

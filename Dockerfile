@@ -24,4 +24,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE ${APPLICATION_PORT}
 
-CMD ["node", "dist/src/main"]
+CMD ["sh", "-c", "npm run typeorm:migrate && node dist/src/main"]
