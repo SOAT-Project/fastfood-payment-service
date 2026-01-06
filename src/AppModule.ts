@@ -6,6 +6,7 @@ import { transports, format } from "winston";
 import { PaymentModule } from "./infra/payment/PaymentModule";
 import { QueueModule } from "./infra/queue/QueueModule";
 import { PaymentTypeOrmEntity } from "./infra/persistence/typeorm/PaymentEntity";
+import { HealthCheckController } from "./infra/web/HealthCheckController";
 
 @Module({
     imports: [
@@ -56,5 +57,6 @@ import { PaymentTypeOrmEntity } from "./infra/persistence/typeorm/PaymentEntity"
         QueueModule,
         PaymentModule,
     ],
+    controllers: [HealthCheckController],
 })
 export class AppModule {}
