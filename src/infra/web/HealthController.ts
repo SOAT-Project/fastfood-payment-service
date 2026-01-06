@@ -8,4 +8,10 @@ export class HealthController {
     check() {
         return { status: "ok" };
     }
+
+    // Compatibilidade com probes externos
+    @Get(["/api/actuator/health/readiness", "/api/actuator/health/liveness"])
+    actuatorHealth() {
+        return { status: "ok" };
+    }
 }
