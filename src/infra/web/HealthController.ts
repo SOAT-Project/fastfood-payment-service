@@ -2,16 +2,14 @@ import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Health")
-@Controller("health")
+@Controller()
 export class HealthController {
-    @Get()
+    @Get("/health")
     check() {
         return { status: "ok" };
     }
 
     @Get([
-        "/api/actuator/health/readiness",
-        "/api/actuator/health/liveness",
         "/payment/api/actuator/health/readiness",
         "/payment/api/actuator/health/liveness",
     ])
