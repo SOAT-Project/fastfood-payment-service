@@ -24,7 +24,7 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
         );
 
         await this.queueService.sendFifoMessage(
-            "payment-to-order.fifo",
+            "fastfood-soat-terraform-payment-to-order.fifo",
             message,
         );
     }
