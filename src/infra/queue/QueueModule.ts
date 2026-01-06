@@ -14,7 +14,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             useFactory: async (configService: ConfigService) => ({
                 consumers: [
                     {
-                        name: "order-to-payment.fifo",
+                        name: "fastfood-soat-terraform-order-to-payment.fifo",
                         suppressFifoWarning: true,
                         queueUrl: (() => {
                             const url = configService.get<string>(
@@ -37,7 +37,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 ],
                 producers: [
                     {
-                        name: "payment-to-order.fifo",
+                        name: "fastfood-soat-terraform-payment-to-order.fifo",
                         suppressFifoWarning: true,
                         queueUrl: (() => {
                             const url = configService.get<string>(

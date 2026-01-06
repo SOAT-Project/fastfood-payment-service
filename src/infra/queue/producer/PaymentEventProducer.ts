@@ -12,7 +12,7 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
         private readonly queueService: QueueServiceGateway,
     ) {}
 
-    @SqsMessageHandler("payment-to-order.fifo", false)
+    @SqsMessageHandler("fastfood-soat-terraform-payment-to-order.fifo", false)
     async publishPaymentStatusUpdated(
         event: PaymentStatusUpdatedEvent,
     ): Promise<void> {
