@@ -35,7 +35,9 @@ async function bootstrap() {
     );
     app.use(helmet.noSniff());
 
-    SwaggerConfig.setup(app);
+    if (process.env.NODE_ENV === "develop") {
+        SwaggerConfig.setup(app);
+    }
 
     app.useGlobalFilters(new GlobalExceptionFilter());
 
