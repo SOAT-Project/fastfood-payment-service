@@ -7,7 +7,7 @@ import { Payment } from "src/domain/payment/Payment";
 import { Notification } from "src/domain/validation/handler/Notification";
 import { NotificationException } from "src/domain/exception/NotificationException";
 import { CreateDynamicQrCodeRequest } from "src/infra/external/mercadopago/model/CreateDynamicQrCodeRequest";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { CreateDynamicQrCodeItem } from "src/infra/external/mercadopago/model/CreateDynamicQrCodeItem";
 import { IllegalStateException } from "src/domain/exception/IllegalStateException";
 import { Transactional } from "typeorm-transactional";
@@ -94,7 +94,5 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
         savedPayment.setQrCode(qrCodeText);
 
         await this.paymentRepositoryGateway.update(savedPayment);
-
-        return;
     }
 }

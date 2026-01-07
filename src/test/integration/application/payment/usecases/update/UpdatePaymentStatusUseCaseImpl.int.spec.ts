@@ -1,6 +1,5 @@
 import { UpdatePaymentStatusCommand } from "src/application/payment/command/update/UpdatePaymentStatusCommand";
 import { PaymentEventProducerGateway } from "src/application/payment/gateway/PaymentEventProducerGateway";
-import { PaymentRepositoryGateway } from "src/application/payment/gateway/PaymentRepositoryGateway";
 import { UpdatePaymentStatusUseCaseImpl } from "src/application/payment/usecases/update/UpdatePaymentStatusUseCaseImpl";
 import { QueueServiceGateway } from "src/application/queue/gateway/QueueServiceGateway";
 import { PaymentStatus } from "src/domain/payment/PaymentStatus";
@@ -65,7 +64,7 @@ describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
 
         jest.spyOn(paymentRepository, "save").mockResolvedValueOnce({
             ...payment,
-            ...{ status: PaymentStatus.APPROVED },
+            status: PaymentStatus.APPROVED,
         });
 
         const command = new UpdatePaymentStatusCommand(

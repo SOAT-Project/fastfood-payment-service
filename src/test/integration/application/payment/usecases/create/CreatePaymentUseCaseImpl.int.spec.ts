@@ -64,7 +64,7 @@ describe("CreatePaymentUseCaseImpl Integration", () => {
 
         jest.spyOn(paymentRepository, "save").mockResolvedValueOnce({
             ...payment,
-            ...{ qrCode: "qr-code-string" },
+            qrCode: "qr-code-string",
         });
 
         expect(await useCase.execute(command)).toBeUndefined();
