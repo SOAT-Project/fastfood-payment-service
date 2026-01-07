@@ -88,7 +88,7 @@ jobs:
               if: steps.read-destroy-config.outputs.destroy == 'true'
               id: terraform-destory
               env:
-                  TF_VAR_APPLICATION_PORT: ${{ secrets.application-port }}
+                  TF_VAR_application_port: ${{ secrets.application-port }}
                   TF_VAR_aws_region: ${{ secrets.aws-region }}
                   TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
                   TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}
@@ -111,7 +111,7 @@ jobs:
               if: steps.read-destroy-config.outputs.destroy != 'true'
               id: terraform-plan
               env:
-                  TF_VAR_APPLICATION_PORT: ${{ secrets.application-port }}
+                  TF_VAR_application_port: ${{ secrets.application-port }}
                   TF_VAR_aws_region: ${{ secrets.aws-region }}
                   TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
                   TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}
@@ -134,7 +134,7 @@ jobs:
               if: steps.read-destroy-config.outputs.destroy != 'true'
               id: terraform-apply
               env:
-                  TF_VAR_APPLICATION_PORT: ${{ secrets.application-port }}
+                  TF_VAR_application_port: ${{ secrets.application-port }}
                   TF_VAR_aws_region: ${{ secrets.aws-region }}
                   TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
                   TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}

@@ -2,7 +2,7 @@ name: "Deploy"
 
 on:
     push:
-        branches: [main, release, develop]
+        branches: [main]
 
 permissions:
     id-token: write
@@ -39,18 +39,18 @@ jobs:
                   echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
                   echo "Ambiente mapeado: $ENVIRONMENT"
     build:
-    needs: set_environment
-    if: success() && needs.set_environment.outputs.mapped_environment != ''
-    uses: ./.github/workflows/docker.yaml
-    with:
-        image_name: soatproject/fastfood-payment-service
-        image_tag: latest
-    secrets:
-        DOCKERHUB_LOGIN: ${{ secrets.DOCKERHUB_LOGIN }}
-        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        needs: set_environment
+        if: success() && needs.set_environment.outputs.mapped_environment != ''
+        uses: ./.github/workflows/docker.yaml
+        with:
+            image_name: soatproject/fastfood-payment-service
+            image_tag: latest
+        secrets:
+            DOCKERHUB_LOGIN: ${{ secrets.DOCKERHUB_LOGIN }}
+            DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
     deploy:
-        needs: set_environment
+        needs: [set_environment, build]
         if: success() && needs.set_environment.outputs.mapped_environment != ''
         uses: ./.github/workflows/terraform.yaml
         with:
