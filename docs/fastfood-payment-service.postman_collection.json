@@ -1,0 +1,58 @@
+{
+    "info": {
+        "name": "Fastfood Payment Service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Set Payment Status to Paid",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"order_id\": \"order-123\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8080/payments/set-to-paid",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "8080",
+                    "path": ["payments", "set-to-paid"]
+                }
+            }
+        },
+        {
+            "name": "Get QR Code by Order ID",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8080/payments/qrcode?orderId=order-123",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "8080",
+                    "path": ["payments", "qrcode"],
+                    "query": [{ "key": "orderId", "value": "order-123" }]
+                }
+            }
+        },
+        {
+            "name": "Get Payment Status by Order ID",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8080/payments/status?orderId=order-123",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "8080",
+                    "path": ["payments", "status"],
+                    "query": [{ "key": "orderId", "value": "order-123" }]
+                }
+            }
+        }
+    ]
+}

@@ -1,42 +1,38 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { WinstonModule } from "nest-winston";
 import { transports, format } from "winston";
 import { PaymentModule } from "./infra/payment/PaymentModule";
 import { QueueModule } from "./infra/queue/QueueModule";
-import { addTransactionalDataSource } from "typeorm-transactional";
-import { DataSource } from "typeorm";
+import { PaymentTypeOrmEntity } from "./infra/persistence/typeorm/PaymentEntity";
+import { HealthCheckController } from "./infra/web/HealthCheckController";
 
 @Module({
     imports: [
-        QueueModule,
-        PaymentModule,
         ConfigModule.forRoot({
             isGlobal: true,
         }),
         TypeOrmModule.forRootAsync({
-            useFactory() {
-                return {
-                    type: "postgres",
-                    host: process.env.DATABASE_HOST || "localhost",
-                    port: Number(process.env.DATABASE_PORT) || 5432,
-                    username: process.env.DATABASE_USERNAME || "postgres",
-                    password: String(
-                        process.env.DATABASE_PASSWORD ?? "P@ssw0rd",
-                    ),
-                    database: process.env.DATABASE_NAME || "postgres",
-                    entities: [__dirname + "/../**/typeorm/*.{ts,js}"],
-                    synchronize: false,
-                };
-            },
-            async dataSourceFactory(options) {
-                if (!options) {
-                    throw new Error("TypeORM options not provided");
-                }
-
-                return addTransactionalDataSource(new DataSource(options));
-            },
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                type: "postgres",
+                host:
+                    configService.get<string>("DATABASE_HOST") ||
+                    "database-1.c9wcvz6wenbw.sa-east-1.rds.amazonaws.com",
+                port: configService.get<number>("DATABASE_PORT") || 5432,
+                username:
+                    configService.get<string>("DATABASE_USERNAME") ||
+                    "postgres",
+                password:
+                    configService.get<string>("DATABASE_PASSWORD") ||
+                    "P@ssw0rd",
+                database:
+                    configService.get<string>("DATABASE_NAME") || "postgres",
+                entities: [PaymentTypeOrmEntity],
+                synchronize: false,
+            }),
+            inject: [ConfigService],
         }),
         WinstonModule.forRoot({
             transports: [
@@ -58,6 +54,9 @@ import { DataSource } from "typeorm";
                 }),
             ],
         }),
+        QueueModule,
+        PaymentModule,
     ],
+    controllers: [HealthCheckController],
 })
 export class AppModule {}

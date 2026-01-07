@@ -37,7 +37,7 @@ describe("UpdatePaymentStatusUseCaseImpl Integration", () => {
         );
 
         queueServiceGateway = {
-            sendMessage: jest.fn(),
+            sendFifoMessage: jest.fn(),
         } as any;
         paymentEventProducerGateway = new PaymentEventProducer(
             queueServiceGateway,

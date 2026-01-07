@@ -1,0 +1,154 @@
+name: "Terraform"
+
+on:
+    workflow_call:
+        inputs:
+            environment:
+                type: string
+                required: true
+        secrets:
+            application-port:
+                required: true
+            aws-assume-role-arn:
+                required: true
+            aws-region:
+                required: true
+            aws-statefile-s3-bucket:
+                required: true
+            aws-lock-dynamodb-table:
+                required: true
+            aws-access-key:
+                required: true
+            aws-secret-key:
+                required: true
+            database-password:
+                required: true
+            database-username:
+                required: true
+            database-host:
+                required: true
+            database-port:
+                required: true
+            database-name:
+                required: true
+            mercado-pago-access-token:
+                required: true
+            mercado-pago-collector-id:
+                required: true
+            mercado-pago-pos-id:
+                required: true
+            mercado-pago-base-url:
+                required: true
+            aws-payment-to-order-queue-url:
+                required: true
+            aws-order-to-payment-queue-url:
+                required: true
+
+jobs:
+    terraform:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: 1.8.3
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ secrets.aws-assume-role-arn }}
+                  role-session-name: GitHub_to_AWS_via_FederatedOIDC
+                  aws-region: ${{ secrets.aws-region }}
+
+            - name: Read destroy config
+              id: read-destroy-config
+              run: |
+                  DESTROY="$(jq -r '.${{ inputs.environment }}' ./infra/terraform/destroy_config.json)"
+                  echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT
+
+            - name: Terraform init
+              run: |
+                  cd infra/terraform && terraform init \
+                    -backend-config="bucket=${{ secrets.aws-statefile-s3-bucket }}" \
+                    -backend-config="key=${{ github.event.repository.name }}" \
+                    -backend-config="region=${{ secrets.aws-region }}" \
+                    -backend-config="dynamodb_table=${{ secrets.aws-lock-dynamodb-table }}"
+
+            - name: Terraform validate
+              run: cd infra/terraform && terraform validate
+
+            - name: Terraform destroy
+              if: steps.read-destroy-config.outputs.destroy == 'true'
+              id: terraform-destory
+              env:
+                  TF_VAR_application_port: ${{ secrets.application-port }}
+                  TF_VAR_aws_region: ${{ secrets.aws-region }}
+                  TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
+                  TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}
+                  TF_VAR_database_password: ${{ secrets.database-password }}
+                  TF_VAR_database_username: ${{ secrets.database-username }}
+                  TF_VAR_database_host: ${{ secrets.database-host }}
+                  TF_VAR_database_port: ${{ secrets.database-port }}
+                  TF_VAR_database_name: ${{ secrets.database-name }}
+                  TF_VAR_mercado_pago_access_token: ${{ secrets.mercado-pago-access-token }}
+                  TF_VAR_mercado_pago_collector_id: ${{ secrets.mercado-pago-collector-id }}
+                  TF_VAR_mercado_pago_pos_id: ${{ secrets.mercado-pago-pos-id }}
+                  TF_VAR_mercado_pago_base_url: ${{ secrets.mercado-pago-base-url }}
+                  TF_VAR_aws_payment_to_order_queue_url: ${{ secrets.aws-payment-to-order-queue-url }}
+                  TF_VAR_aws_order_to_payment_queue_url: ${{ secrets.aws-order-to-payment-queue-url }}
+              run: cd infra/terraform &&
+                  terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+                  terraform destroy -var-file="./environment/${{ inputs.environment }}/terraform.tfvars" -auto-approve
+
+            - name: Terraform plan
+              if: steps.read-destroy-config.outputs.destroy != 'true'
+              id: terraform-plan
+              env:
+                  TF_VAR_application_port: ${{ secrets.application-port }}
+                  TF_VAR_aws_region: ${{ secrets.aws-region }}
+                  TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
+                  TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}
+                  TF_VAR_database_password: ${{ secrets.database-password }}
+                  TF_VAR_database_username: ${{ secrets.database-username }}
+                  TF_VAR_database_host: ${{ secrets.database-host }}
+                  TF_VAR_database_port: ${{ secrets.database-port }}
+                  TF_VAR_database_name: ${{ secrets.database-name }}
+                  TF_VAR_mercado_pago_access_token: ${{ secrets.mercado-pago-access-token }}
+                  TF_VAR_mercado_pago_collector_id: ${{ secrets.mercado-pago-collector-id }}
+                  TF_VAR_mercado_pago_pos_id: ${{ secrets.mercado-pago-pos-id }}
+                  TF_VAR_mercado_pago_base_url: ${{ secrets.mercado-pago-base-url }}
+                  TF_VAR_aws_payment_to_order_queue_url: ${{ secrets.aws-payment-to-order-queue-url }}
+                  TF_VAR_aws_order_to_payment_queue_url: ${{ secrets.aws-order-to-payment-queue-url }}
+              run: cd infra/terraform &&
+                  terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+                  terraform plan -var-file="./environment/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.plan"
+
+            - name: Terraform apply
+              if: steps.read-destroy-config.outputs.destroy != 'true'
+              id: terraform-apply
+              env:
+                  TF_VAR_application_port: ${{ secrets.application-port }}
+                  TF_VAR_aws_region: ${{ secrets.aws-region }}
+                  TF_VAR_aws_access_key: ${{ secrets.aws-access-key }}
+                  TF_VAR_aws_secret_key: ${{ secrets.aws-secret-key }}
+                  TF_VAR_database_password: ${{ secrets.database-password }}
+                  TF_VAR_database_username: ${{ secrets.database-username }}
+                  TF_VAR_database_host: ${{ secrets.database-host }}
+                  TF_VAR_database_port: ${{ secrets.database-port }}
+                  TF_VAR_database_name: ${{ secrets.database-name }}
+                  TF_VAR_mercado_pago_access_token: ${{ secrets.mercado-pago-access-token }}
+                  TF_VAR_mercado_pago_collector_id: ${{ secrets.mercado-pago-collector-id }}
+                  TF_VAR_mercado_pago_pos_id: ${{ secrets.mercado-pago-pos-id }}
+                  TF_VAR_mercado_pago_base_url: ${{ secrets.mercado-pago-base-url }}
+                  TF_VAR_aws_payment_to_order_queue_url: ${{ secrets.aws-payment-to-order-queue-url }}
+                  TF_VAR_aws_order_to_payment_queue_url: ${{ secrets.aws-order-to-payment-queue-url }}
+              run: cd infra/terraform &&
+                  terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+                  terraform apply "${{ inputs.environment }}.plan"

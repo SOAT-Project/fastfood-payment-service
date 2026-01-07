@@ -1,16 +1,21 @@
 import { NestFactory } from "@nestjs/core";
-import { initializeTransactionalContext } from "typeorm-transactional";
+import {
+    addTransactionalDataSource,
+    initializeTransactionalContext,
+} from "typeorm-transactional";
 import { ValidationPipe } from "@nestjs/common";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { SwaggerConfig } from "./infra/config/SwaggerConfig";
 import { GlobalExceptionFilter } from "./infra/web/filters/GlobalExceptionFilter";
 import { AppModule } from "./AppModule";
 import helmet from "helmet";
+import { DataSource } from "typeorm";
 
 async function bootstrap() {
     initializeTransactionalContext();
-
     const app = await NestFactory.create(AppModule);
+    const dataSource = app.get(DataSource);
+    addTransactionalDataSource(dataSource);
 
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
@@ -30,10 +35,12 @@ async function bootstrap() {
     );
     app.use(helmet.noSniff());
 
-    SwaggerConfig.setup(app);
+    if (process.env.NODE_ENV === "develop") {
+        SwaggerConfig.setup(app);
+    }
 
     app.useGlobalFilters(new GlobalExceptionFilter());
 
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(process.env.APPLICATION_PORT ?? 8080);
 }
 bootstrap();

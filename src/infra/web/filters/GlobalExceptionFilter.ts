@@ -50,8 +50,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         if (exception instanceof HttpException) {
             this.logger.error("HttpException", exception.stack);
 
+            const request = ctx.getRequest();
             const status = exception.getStatus();
             const responseBody: any = exception.getResponse();
+
+            this.logger.error(
+                `HttpException | Status: ${status} | URL: ${request.url} | Message: ${JSON.stringify(responseBody)} | Stack: ${exception.stack}`,
+            );
 
             const errors: DomainError[] = Array.isArray(responseBody?.message)
                 ? responseBody.message.map(
