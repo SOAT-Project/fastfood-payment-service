@@ -71,8 +71,16 @@ terraform apply
 ## Health Check
 
 - Readiness/Liveness: `GET /payments/health`
-- Atende também: `/payments/api/actuator/health/readiness` e `/payments/api/actuator/health/liveness`
+- Atende também: `/payments/health/readiness` e `/payments/health/liveness`
 
 ## Variáveis de Ambiente
 
 Configuração via ConfigMap e Secret no Kubernetes. Veja exemplos em `infra/kubernetes/configmap.yaml` e `infra/kubernetes/deployment.yaml`.
+
+## Sonar Scan Resultado
+
+![Sonar Scan](docs/sonar-scan.png)
+
+## Cobertura de Testes
+
+![Cobertura de Testes](docs/test-coverage.png)
