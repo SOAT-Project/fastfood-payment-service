@@ -69,9 +69,11 @@ describe("MercadoPagoService Integration", () => {
         const httpError = new Error(
             "Unexpected error during Mercado Pago payment",
         );
+
         (service as any).httpService.post.mockReturnValue(
             of(Promise.reject(httpError)),
         );
+
         await expect(service.createDynamicQrCode(request)).rejects.toThrow(
             "Unexpected error during Mercado Pago payment",
         );
@@ -91,9 +93,11 @@ describe("MercadoPagoService Integration", () => {
         const httpError = {
             response: { data: { message: "Invalid request" } },
         };
+
         (service as any).httpService.post.mockReturnValue(
             of(Promise.reject(httpError)),
         );
+
         await expect(service.createDynamicQrCode(request)).rejects.toThrow(
             "Invalid request",
         );
