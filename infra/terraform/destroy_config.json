@@ -1,5 +1,5 @@
 {
     "dev": true,
-    "hom": false,
+    "hom": true,
     "prod": false
 }
