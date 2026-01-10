@@ -16,6 +16,8 @@ export class OrderConsumer {
 
     @SqsMessageHandler("fastfood-soat-terraform-order-to-payment.fifo", false)
     async handleMessage(message: Message): Promise<void> {
+        this.logger.log(`Received message: ${JSON.stringify(message)}`);
+
         const messageBody = message.Body;
 
         if (!messageBody) {
