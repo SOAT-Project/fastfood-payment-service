@@ -32,10 +32,6 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
         customerId,
         items,
     }: CreatePaymentCommand): Promise<void> {
-        this.logger.log(
-            `Creating payment for orderId: ${orderId}, customerId: ${customerId}, totalAmount: ${totalAmount}`,
-        );
-
         const existingPayment =
             await this.paymentRepositoryGateway.findByOrderId(orderId);
 
@@ -58,10 +54,6 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
             ),
         );
 
-        this.logger.log(
-            `Payment instance created for orderId: ${orderId}, validating...`,
-        );
-
         if (notification.hasError()) {
             this.logger.error(
                 `Payment validation failed for orderId: ${orderId})`,
@@ -75,10 +67,6 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
 
         const savedPayment =
             await this.paymentRepositoryGateway.create(payment);
-
-        this.logger.log(
-            `Payment created with id: ${savedPayment.getValue().toString()} for orderId: ${orderId}`,
-        );
 
         const dynamicQrCodeItems: CreateDynamicQrCodeItem[] = items.map(
             (item) => ({
@@ -95,12 +83,6 @@ export class CreatePaymentUseCaseImpl extends CreatePaymentUseCase {
             externalReference,
             savedPayment.getValue(),
             dynamicQrCodeItems,
-        );
-
-        this.logger.log(
-            `Creating dynamic QR Code for paymentId: ${JSON.stringify(
-                dynamicQrCodeRequest,
-            )}`,
         );
 
         const qrCodeText =

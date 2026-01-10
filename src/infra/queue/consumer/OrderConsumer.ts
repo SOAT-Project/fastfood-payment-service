@@ -17,7 +17,9 @@ export class OrderConsumer {
     @SqsMessageHandler("fastfood-soat-terraform-order-to-payment.fifo", false)
     async handleMessage(message: Message): Promise<void> {
         try {
-            this.logger.log(`Received message: ${JSON.stringify(message)}`);
+            this.logger.log(
+                `Received message in OrderConsumer: ${message.MessageId}`,
+            );
 
             const messageBody = message.Body;
 
@@ -29,7 +31,7 @@ export class OrderConsumer {
             const parsedBody: OrderEvent = JSON.parse(messageBody);
 
             this.logger.log(
-                `Processing order event for orderId: ${parsedBody}`,
+                `Processing order event for orderId: ${parsedBody.orderId}`,
             );
 
             const command = new CreatePaymentCommand(
@@ -37,10 +39,6 @@ export class OrderConsumer {
                 parsedBody.customerId.toString(),
                 parsedBody.totalAmount,
                 parsedBody.items,
-            );
-
-            this.logger.log(
-                `Executing CreatePaymentUseCase with command: ${JSON.stringify(command)}`,
             );
 
             await this.createPaymentUseCase.execute(command);
