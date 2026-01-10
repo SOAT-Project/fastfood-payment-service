@@ -1,31 +1,31 @@
 export class QueueMessage<T = any> {
-    id: string;
     eventType: string;
-    payload: T;
+    orderId: string;
+    paidAt: string;
+    amount: number;
     groupId?: string;
-    occurredAt: Date;
 
     protected constructor(
-        id: string,
         eventType: string,
-        payload: T,
+        orderId: string,
+        paidAt: string,
+        amount: number,
         groupId: string | undefined,
-        occurredAt: Date,
     ) {
-        this.id = id;
         this.eventType = eventType;
-        this.payload = payload;
+        this.orderId = orderId;
+        this.paidAt = paidAt;
+        this.amount = amount;
         this.groupId = groupId;
-        this.occurredAt = occurredAt;
     }
 
     static with<T>(
-        id: string,
         eventType: string,
-        payload: T,
-        occurredAt: Date,
+        orderId: string,
+        paidAt: string,
+        amount: number,
         groupId?: string,
     ): QueueMessage<T> {
-        return new QueueMessage<T>(id, eventType, payload, groupId, occurredAt);
+        return new QueueMessage<T>(eventType, orderId, paidAt, amount, groupId);
     }
 }

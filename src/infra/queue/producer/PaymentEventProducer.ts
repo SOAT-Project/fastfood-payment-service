@@ -4,6 +4,7 @@ import { QueueMessage } from "src/domain/queue/QueueMessage";
 import type { PaymentStatusUpdatedEvent } from "../model/PaymentStatusUpdatedEvent";
 import { SqsMessageHandler } from "@ssut/nestjs-sqs";
 import { PaymentEventProducerGateway } from "src/application/payment/gateway/PaymentEventProducerGateway";
+import { randomUUID } from "node:crypto";
 
 @Injectable()
 export class PaymentEventProducer implements PaymentEventProducerGateway {
@@ -17,10 +18,10 @@ export class PaymentEventProducer implements PaymentEventProducerGateway {
         event: PaymentStatusUpdatedEvent,
     ): Promise<void> {
         const message = QueueMessage.with(
-            event.orderId,
             "ORDER_PAID",
-            event,
-            new Date(event.paidAt),
+            event.orderId,
+            event.paidAt,
+            event.amount,
         );
 
         await this.queueService.sendFifoMessage(
