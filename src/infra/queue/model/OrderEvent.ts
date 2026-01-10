@@ -1,7 +1,7 @@
 export interface OrderEvent {
     eventType: string;
     orderId: string;
-    customerId: string;
+    customerId: number;
     totalAmount: number;
     items: Array<{
         productId: number;
