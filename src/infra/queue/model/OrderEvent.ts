@@ -4,7 +4,7 @@ export interface OrderEvent {
     customerId: string;
     totalAmount: number;
     items: Array<{
-        productId: string;
+        productId: number;
         quantity: number;
         price: number;
     }>;

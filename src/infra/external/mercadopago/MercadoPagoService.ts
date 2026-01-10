@@ -22,6 +22,10 @@ export class MercadoPagoService implements PaymentService {
         items: orderProducts,
     }: CreateDynamicQrCodeRequest): Promise<string> {
         try {
+            this.logger.log(
+                `Creating Mercado Pago dynamic QR code for orderId: ${orderId}`,
+            );
+
             const path = `/instore/orders/qr/seller/collectors/${this.mercadoPagoConfig.collectorId}/pos/${this.mercadoPagoConfig.posId}/qrs`;
 
             const requestBody = {
@@ -30,7 +34,7 @@ export class MercadoPagoService implements PaymentService {
                 external_reference: externalReference,
                 total_amount: totalAmount,
                 items: orderProducts.map((orderProduct) => ({
-                    title: orderProduct.title,
+                    title: `Product ${orderProduct.title}`,
                     total_amount: orderProduct.totalAmount,
                     quantity: orderProduct.quantity,
                     unit_price: orderProduct.unitPrice,

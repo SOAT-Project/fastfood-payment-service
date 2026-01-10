@@ -3,7 +3,7 @@ export class CreatePaymentCommand {
     customerId: string;
     totalAmount: number;
     items: Array<{
-        productId: string;
+        productId: number;
         quantity: number;
         price: number;
     }>;
@@ -12,7 +12,7 @@ export class CreatePaymentCommand {
         orderId: string,
         customerId: string,
         totalAmount: number,
-        items: Array<{ productId: string; quantity: number; price: number }>,
+        items: Array<{ productId: number; quantity: number; price: number }>,
     ) {
         this.orderId = orderId;
         this.customerId = customerId;
