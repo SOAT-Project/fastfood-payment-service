@@ -16,24 +16,39 @@ export class OrderConsumer {
 
     @SqsMessageHandler("fastfood-soat-terraform-order-to-payment.fifo", false)
     async handleMessage(message: Message): Promise<void> {
-        this.logger.log(`Received message: ${JSON.stringify(message)}`);
+        try {
+            this.logger.log(`Received message: ${JSON.stringify(message)}`);
 
-        const messageBody = message.Body;
+            const messageBody = message.Body;
 
-        if (!messageBody) {
-            this.logger.warn("Received empty message body.");
-            return;
+            if (!messageBody) {
+                this.logger.warn("Received empty message body.");
+                return;
+            }
+
+            const parsedBody: OrderEvent = JSON.parse(messageBody);
+
+            this.logger.log(
+                `Processing order event for orderId: ${parsedBody}`,
+            );
+
+            const command = new CreatePaymentCommand(
+                parsedBody.orderId,
+                parsedBody.customerId.toString(),
+                parsedBody.totalAmount,
+                parsedBody.items,
+            );
+
+            this.logger.log(
+                `Executing CreatePaymentUseCase with command: ${JSON.stringify(command)}`,
+            );
+
+            await this.createPaymentUseCase.execute(command);
+        } catch (error) {
+            this.logger.error(
+                `Error processing message: ${error.message}`,
+                error.stack,
+            );
         }
-
-        const parsedBody: OrderEvent = JSON.parse(messageBody);
-
-        const command = new CreatePaymentCommand(
-            parsedBody.orderId,
-            parsedBody.customerId,
-            parsedBody.totalAmount,
-            parsedBody.items,
-        );
-
-        await this.createPaymentUseCase.execute(command);
     }
 }
