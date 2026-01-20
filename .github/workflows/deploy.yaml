@@ -38,6 +38,7 @@ jobs:
 
                   echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
                   echo "Ambiente mapeado: $ENVIRONMENT"
+
     build:
         needs: set_environment
         if: success() && needs.set_environment.outputs.mapped_environment != ''
